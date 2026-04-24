@@ -1,35 +1,32 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "ui": "tui",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "NEXT_PUBLIC_APP_URL",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
+        "STRIPE_PRICE_STARTER_MONTHLY",
+        "STRIPE_PRICE_PRO_MONTHLY",
+        "RESEND_API_KEY",
+        "RESEND_FROM_EMAIL",
+        "UPSTASH_REDIS_REST_URL",
+        "UPSTASH_REDIS_REST_TOKEN"
+      ]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "type-check": {
-      "dependsOn": ["^build"]
-    },
-    "db:generate": {
-      "cache": false,
-      "outputs": ["src/generated/**"]
-    },
-    "db:push": {
-      "cache": false
-    },
-    "db:migrate": {
-      "cache": false
-    },
-    "db:studio": {
-      "cache": false,
-      "persistent": true
-    }
+    "lint": {},
+    "type-check": {}
   }
 }
+
