@@ -31,11 +31,31 @@ export function shortCodeUrl(shortCode: string): string {
   return `${base}/r/${shortCode}`;
 }
 
+// Generates a stable preview short code from a URL without hitting the DB.
+// Uses djb2 hash + LCG to produce a consistent 6-char code for display only.
+export function previewShortCode(url: string): string {
+  let hash = 5381;
+  for (let i = 0; i < url.length; i++) {
+    hash = (Math.imul(31, hash) + url.charCodeAt(i)) | 0;
+  }
+  let n = (hash >>> 0) || 1;
+  let code = "";
+  for (let i = 0; i < 6; i++) {
+    n = ((Math.imul(1664525, n) + 1013904223) >>> 0);
+    code += ALPHABET[n % ALPHABET.length];
+  }
+  return code;
+}
+
 // Generates a QR code as an inline SVG string.
-export async function generateQRSvg(url: string): Promise<string> {
+export async function generateQRSvg(
+  url: string,
+  fgColor = "#000000",
+  bgColor = "#FFFFFF"
+): Promise<string> {
   return QRCode.toString(url, {
     type: "svg",
     margin: 1,
-    color: { dark: "#000000", light: "#FFFFFF" },
+    color: { dark: fgColor, light: bgColor },
   });
 }

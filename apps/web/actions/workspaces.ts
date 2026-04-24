@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { logError, isNextInternalError } from "@/lib/logger";
 
 type WorkspaceState = { error?: string };
 
@@ -21,39 +22,45 @@ export async function createWorkspace(
   _prevState: WorkspaceState,
   formData: FormData
 ): Promise<WorkspaceState> {
-  const user = await requireUser();
-  const name = (formData.get("name") as string).trim();
+  try {
+    const user = await requireUser();
+    const name = (formData.get("name") as string).trim();
+    const rawNext = (formData.get("next") as string | null)?.trim() ?? "";
+    const next = rawNext.startsWith("/") ? rawNext : "/dashboard";
 
-  if (!name) return { error: "Workspace name is required." };
+    if (!name) return { error: "Workspace name is required." };
 
-  // Insert workspace — DB generates the id via DEFAULT gen_random_uuid()::text.
-  const { data: wsData, error: wsError } = await supabaseAdmin
-    .from("workspaces")
-    .insert({
-      slug: toSlug(name),
-      name,
-      plan: "FREE",
-      updatedAt: new Date().toISOString(),
-    })
-    .select("id")
-    .single();
+    const { data: wsData, error: wsError } = await supabaseAdmin
+      .from("workspaces")
+      .insert({
+        slug: toSlug(name),
+        name,
+        plan: "FREE",
+        updatedAt: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
 
-  if (wsError) return { error: wsError.message };
+    if (wsError) return { error: wsError.message };
 
-  // Insert owner membership — DB generates its own id too.
-  const { error: memberError } = await supabaseAdmin
-    .from("workspace_members")
-    .insert({
-      workspaceId: wsData.id,
-      userId: user.id,
-      role: "OWNER",
-    });
+    const { error: memberError } = await supabaseAdmin
+      .from("workspace_members")
+      .insert({
+        workspaceId: wsData.id,
+        userId: user.id,
+        role: "OWNER",
+      });
 
-  if (memberError) {
-    await supabaseAdmin.from("workspaces").delete().eq("id", wsData.id);
-    return { error: memberError.message };
+    if (memberError) {
+      await supabaseAdmin.from("workspaces").delete().eq("id", wsData.id);
+      return { error: memberError.message };
+    }
+
+    revalidatePath("/dashboard");
+    redirect(next);
+  } catch (err) {
+    if (isNextInternalError(err)) throw err;
+    logError("action:createWorkspace", err);
+    return { error: "Something went wrong. Please try again." };
   }
-
-  revalidatePath("/dashboard");
-  redirect("/dashboard");
 }

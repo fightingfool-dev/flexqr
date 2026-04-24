@@ -14,8 +14,8 @@ export function TryItInput() {
     e.preventDefault();
     const trimmed = url.trim();
     if (!trimmed) return;
-    track("cta_click", { label: "Generate", location: "hero_try_it" });
-    router.push(`/sign-up?prefillUrl=${encodeURIComponent(trimmed)}`);
+    track("cta_click", { label: "Generate QR Code", location: "hero_try_it" });
+    router.push(`/create?url=${encodeURIComponent(trimmed)}`);
   }
 
   return (
@@ -25,13 +25,13 @@ export function TryItInput() {
     >
       <Input
         type="url"
-        placeholder="https://your-link.com"
+        placeholder="Paste your link"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         className="flex-1"
         required
       />
-      <Button type="submit">Generate</Button>
+      <Button type="submit">Generate QR Code</Button>
     </form>
   );
 }

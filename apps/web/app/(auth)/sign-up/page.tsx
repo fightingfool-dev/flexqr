@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: "Create account" };
 export default async function SignUpPage({
   searchParams,
 }: {
-  searchParams: Promise<{ prefillUrl?: string }>;
+  searchParams: Promise<{ prefillUrl?: string; next?: string }>;
 }) {
   return (
     <Card>

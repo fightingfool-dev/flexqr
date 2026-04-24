@@ -155,6 +155,24 @@ model Domain {
 }
 
 // ---------------------------------------------------------------------------
+// Session events (lightweight funnel tracking)
+// ---------------------------------------------------------------------------
+model Event {
+  id         String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  sessionId  String?  // anonymous browser session (localStorage UUID)
+  userId     String?  // set for authenticated events
+  event      String   // e.g. "page_view", "qr_created", "cta_click"
+  properties Json     @default("{}")
+  createdAt  DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([event])
+  @@index([createdAt])
+  @@map("events")
+}
+
+// ---------------------------------------------------------------------------
 // Enums
 // ---------------------------------------------------------------------------
 enum Plan {

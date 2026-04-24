@@ -1,3 +1,6 @@
+import { getSessionId } from "./session-id";
+import { trackEvent } from "@/actions/tracking";
+
 export type TrackProperties = Record<string, unknown>;
 
 export function track(event: string, properties?: TrackProperties): void {
@@ -11,6 +14,6 @@ export function track(event: string, properties?: TrackProperties): void {
     });
   }
 
-  // TODO: call real provider here (PostHog, Segment, Plausible, etc.)
-  // e.g. posthog.capture(event, properties)
+  const sessionId = getSessionId();
+  trackEvent(sessionId, event, properties ?? {}).catch(() => {});
 }

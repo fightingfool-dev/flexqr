@@ -5,10 +5,10 @@ import { ChevronLeft, BarChart2 } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { shortCodeUrl } from "@/lib/qr";
-import { QRPreview } from "@/components/qr/qr-preview";
 import { EditQRForm } from "@/components/qr/edit-qr-form";
+import { QRCustomizer } from "@/components/qr/qr-customizer";
 import { Button } from "@/components/ui/button";
-import type { DbQRCode } from "@/lib/database.types";
+import type { DbQRCode, DbQRDesign } from "@/lib/database.types";
 
 export const metadata: Metadata = { title: "Edit QR code" };
 
@@ -29,6 +29,19 @@ export default async function EditQRCodePage({
   if (!data) notFound();
   const qrCode = data as DbQRCode;
   const redirectUrl = shortCodeUrl(qrCode.shortCode);
+
+  const { data: designData } = await supabaseAdmin
+    .from("qr_designs")
+    .select("fgColor, bgColor")
+    .eq("qrCodeId", id)
+    .maybeSingle();
+
+  const design = designData as Pick<DbQRDesign, "fgColor" | "bgColor"> | null;
+
+  const filename = qrCode.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "qr-code";
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -59,12 +72,18 @@ export default async function EditQRCodePage({
       </div>
 
       <div className="flex flex-col gap-8 sm:flex-row sm:items-start">
-        {/* QR preview */}
-        <div className="space-y-2">
-          <QRPreview url={redirectUrl} size={192} />
-          <p className="text-xs text-muted-foreground text-center">
-            {qrCode.scanCount} scan{qrCode.scanCount !== 1 ? "s" : ""}
-          </p>
+        {/* QR customizer (preview + design controls + download) */}
+        <div className="sm:w-64 shrink-0">
+          <QRCustomizer
+            qrCodeId={qrCode.id}
+            url={redirectUrl}
+            filename={filename}
+            scanCount={qrCode.scanCount}
+            initialDesign={{
+              fgColor: design?.fgColor ?? "#000000",
+              bgColor: design?.bgColor ?? "#FFFFFF",
+            }}
+          />
         </div>
 
         {/* Edit form */}

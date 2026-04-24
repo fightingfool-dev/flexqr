@@ -11,8 +11,13 @@ import {
 
 export const metadata: Metadata = { title: "Create your workspace" };
 
-export default async function OnboardingPage() {
+export default async function OnboardingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
   await requireUser();
+  const { next } = await searchParams;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
@@ -25,7 +30,7 @@ export default async function OnboardingPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <OnboardingForm />
+            <OnboardingForm next={next} />
           </CardContent>
         </Card>
       </div>

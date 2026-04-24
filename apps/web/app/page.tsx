@@ -14,7 +14,21 @@ import { MobileStickyCta } from "@/components/landing/mobile-sticky-cta";
 
 export const metadata: Metadata = {
   title: { absolute: "QR Code Generator with Analytics" },
-  description: "Create dynamic QR codes, track scans, and update links anytime.",
+  description:
+    "Create dynamic QR codes and track scans in real time. Update destination URLs anytime without reprinting.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "QR Code Generator with Analytics | FlexQR",
+    description: "Create dynamic QR codes and track scans in real time",
+    url: "/",
+    type: "website",
+  },
+  twitter: {
+    title: "QR Code Generator with Analytics | FlexQR",
+    description: "Create dynamic QR codes and track scans in real time",
+  },
 };
 
 export default async function HomePage() {

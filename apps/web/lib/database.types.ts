@@ -81,6 +81,15 @@ export type DbSubscription = {
   currentPeriodEnd: string | null;
 };
 
+export type DbEvent = {
+  id: string;
+  sessionId: string | null;
+  userId: string | null;
+  event: string;
+  properties: Record<string, unknown>;
+  createdAt: string;
+};
+
 export type DbDomain = {
   id: string;
   workspaceId: string;

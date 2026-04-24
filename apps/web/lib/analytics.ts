@@ -86,6 +86,88 @@ export async function getQRAnalytics(qrCodeId: string): Promise<QRAnalytics> {
   };
 }
 
+export type DashboardStats = {
+  totalScans: number;
+  uniqueScans30d: number;
+  activeQR: number;
+  totalQR: number;
+  scansLast7: number;
+  scansPrev7: number;
+};
+
+export async function getDashboardStats(
+  workspaceId: string
+): Promise<DashboardStats> {
+  const { data: qrRows } = await supabaseAdmin
+    .from("qr_codes")
+    .select("id, scanCount, isActive")
+    .eq("workspaceId", workspaceId);
+
+  const qrs = (qrRows ?? []) as Array<{
+    id: string;
+    scanCount: number;
+    isActive: boolean;
+  }>;
+  const totalScans = qrs.reduce((s, r) => s + (r.scanCount ?? 0), 0);
+  const activeQR = qrs.filter((r) => r.isActive).length;
+  const totalQR = qrs.length;
+
+  if (totalQR === 0) {
+    return {
+      totalScans: 0,
+      uniqueScans30d: 0,
+      activeQR: 0,
+      totalQR: 0,
+      scansLast7: 0,
+      scansPrev7: 0,
+    };
+  }
+
+  const qrIds = qrs.map((r) => r.id);
+  const now = Date.now();
+  const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const fourteenDaysAgo = new Date(
+    now - 14 * 24 * 60 * 60 * 1000
+  ).toISOString();
+  const thirtyDaysAgo = new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  const [{ data: trendRows }, { data: uniqueRows }] = await Promise.all([
+    supabaseAdmin
+      .from("scans")
+      .select("scannedAt")
+      .in("qrCodeId", qrIds)
+      .gte("scannedAt", fourteenDaysAgo)
+      .limit(5000),
+    supabaseAdmin
+      .from("scans")
+      .select("ipHash")
+      .in("qrCodeId", qrIds)
+      .gte("scannedAt", thirtyDaysAgo)
+      .limit(10000),
+  ]);
+
+  const scansLast7 = (trendRows ?? []).filter(
+    (r) => r.scannedAt >= sevenDaysAgo
+  ).length;
+  const scansPrev7 = (trendRows ?? []).filter(
+    (r) => r.scannedAt < sevenDaysAgo
+  ).length;
+
+  const uniqueSet = new Set<string>();
+  for (const row of uniqueRows ?? []) {
+    if (row.ipHash) uniqueSet.add(row.ipHash as string);
+  }
+
+  return {
+    totalScans,
+    uniqueScans30d: uniqueSet.size,
+    activeQR,
+    totalQR,
+    scansLast7,
+    scansPrev7,
+  };
+}
+
 export type WorkspaceAnalytics = {
   last30Days: DayScan[];
   devices: BreakdownItem[];

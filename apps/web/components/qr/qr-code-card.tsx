@@ -1,8 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Copy, Pencil, Trash2, ExternalLink, BarChart2 } from "lucide-react";
+import { Copy, Check, Pencil, Trash2, ExternalLink, BarChart2, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -17,10 +17,18 @@ type Props = {
 
 export function QRCodeCard({ qrCode, shortUrl }: Props) {
   const [toggling, startToggle] = useTransition();
-  const deleteAction = deleteQRCode.bind(null, qrCode.id);
+  const [deleting, startDelete] = useTransition();
+  const [copied, setCopied] = useState(false);
 
   function copyUrl() {
     navigator.clipboard.writeText(shortUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  function handleDelete() {
+    if (!confirm(`Delete "${qrCode.name}"? This cannot be undone.`)) return;
+    startDelete(() => deleteQRCode(qrCode.id, new FormData()));
   }
 
   return (
@@ -29,7 +37,7 @@ export function QRCodeCard({ qrCode, shortUrl }: Props) {
       <div className="pt-0.5">
         <Switch
           checked={qrCode.isActive}
-          disabled={toggling}
+          disabled={toggling || deleting}
           onCheckedChange={() =>
             startToggle(() => toggleQRCode(qrCode.id, qrCode.isActive))
           }
@@ -56,10 +64,14 @@ export function QRCodeCard({ qrCode, shortUrl }: Props) {
           </code>
           <button
             onClick={copyUrl}
-            title="Copy URL"
+            title={copied ? "Copied!" : "Copy URL"}
             className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
           >
-            <Copy className="h-3.5 w-3.5" />
+            {copied ? (
+              <Check className="h-3.5 w-3.5 text-emerald-500" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
           </button>
         </div>
 
@@ -94,23 +106,20 @@ export function QRCodeCard({ qrCode, shortUrl }: Props) {
             <Pencil className="h-4 w-4" />
           </Link>
         </Button>
-
-        <form action={deleteAction}>
-          <Button
-            type="submit"
-            variant="ghost"
-            size="icon"
-            title="Delete"
-            className="text-muted-foreground hover:text-destructive"
-            onClick={(e) => {
-              if (!confirm(`Delete "${qrCode.name}"? This cannot be undone.`)) {
-                e.preventDefault();
-              }
-            }}
-          >
+        <Button
+          variant="ghost"
+          size="icon"
+          title="Delete"
+          disabled={deleting}
+          className="text-muted-foreground hover:text-destructive"
+          onClick={handleDelete}
+        >
+          {deleting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
             <Trash2 className="h-4 w-4" />
-          </Button>
-        </form>
+          )}
+        </Button>
       </div>
     </div>
   );

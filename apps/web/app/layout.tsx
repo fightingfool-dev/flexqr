@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { PageTracker } from "@/components/tracking/page-tracker";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,11 +15,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL ?? "https://flexqr.app"
+  ),
   title: {
     default: "FlexQR",
     template: "%s | FlexQR",
   },
   description: "Dynamic QR codes that you can update anytime.",
+  openGraph: {
+    siteName: "FlexQR",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -32,8 +48,9 @@ export default function RootLayout({
       className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-          <TooltipProvider>{children}</TooltipProvider>
-        </body>
+        <PageTracker />
+        <TooltipProvider>{children}</TooltipProvider>
+      </body>
     </html>
   );
 }
