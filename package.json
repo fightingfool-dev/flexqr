@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.29.3",
   "scripts": {
-    "build": "turbo build",
+    "build": "pnpm db:generate && turbo build",
     "dev": "turbo dev --filter=@flexqr/web",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
