@@ -1,0 +1,27 @@
+{
+  "name": "flexqr",
+  "private": true,
+  "packageManager": "pnpm@10.29.3",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev --filter=@flexqr/web",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "db:generate": "turbo db:generate --filter=@flexqr/db",
+    "db:push": "turbo db:push --filter=@flexqr/db",
+    "db:migrate": "turbo db:migrate --filter=@flexqr/db",
+    "db:studio": "turbo db:studio --filter=@flexqr/db"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma",
+      "sharp",
+      "unrs-resolver"
+    ]
+  }
+}

@@ -1,0 +1,187 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Pooled connection (pgBouncer) for runtime queries
+  url       = env("DATABASE_URL")
+  // Direct connection for migrations
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Users — mirrors auth.users from Supabase; created on first sign-in
+// ---------------------------------------------------------------------------
+model User {
+  id        String   @id // Supabase auth.users UUID
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+
+  memberships WorkspaceMember[]
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// Workspaces — the core multi-tenancy unit (one user can own many)
+// ---------------------------------------------------------------------------
+model Workspace {
+  id        String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  slug      String   @unique // used in dashboard URLs
+  name      String
+  plan      Plan     @default(FREE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members      WorkspaceMember[]
+  qrCodes      QRCode[]
+  subscription Subscription?
+  domains      Domain[]
+
+  @@map("workspaces")
+}
+
+model WorkspaceMember {
+  id          String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  workspaceId String
+  userId      String
+  role        Role     @default(MEMBER)
+  joinedAt    DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@map("workspace_members")
+}
+
+// ---------------------------------------------------------------------------
+// QR Codes
+// ---------------------------------------------------------------------------
+model QRCode {
+  id             String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  workspaceId    String
+  shortCode      String   @unique // e.g. "abc12" → used in /r/[shortCode]
+  name           String
+  destinationUrl String
+  type           QRType   @default(URL)
+  isActive       Boolean  @default(true)
+  imageUrl       String? // pre-rendered PNG/SVG stored in blob storage
+  scanCount      Int      @default(0) // denormalised for fast list display
+  tags           String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  design    QRDesign?
+  scans     Scan[]
+
+  @@index([workspaceId])
+  @@index([shortCode])
+  @@map("qr_codes")
+}
+
+model QRDesign {
+  id              String  @id @default(dbgenerated("gen_random_uuid()::text"))
+  qrCodeId        String  @unique
+  fgColor         String  @default("#000000")
+  bgColor         String  @default("#FFFFFF")
+  dotStyle        String  @default("square") // square | dots | rounded
+  cornerStyle     String  @default("square")
+  logoUrl         String?
+  logoSize        Float   @default(0.2)
+  errorCorrection String  @default("M") // L | M | Q | H
+
+  qrCode QRCode @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+
+  @@map("qr_designs")
+}
+
+// ---------------------------------------------------------------------------
+// Scan events (one row per scan)
+// ---------------------------------------------------------------------------
+model Scan {
+  id         String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  qrCodeId   String
+  scannedAt  DateTime @default(now())
+  country    String?
+  city       String?
+  deviceType String? // mobile | tablet | desktop
+  os         String?
+  browser    String?
+  referer    String?
+  ipHash     String? // SHA-256 of IP — stored for dedup, never raw IP
+
+  qrCode QRCode @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+
+  @@index([qrCodeId, scannedAt])
+  @@map("scans")
+}
+
+// ---------------------------------------------------------------------------
+// Billing
+// ---------------------------------------------------------------------------
+model Subscription {
+  id                   String    @id @default(dbgenerated("gen_random_uuid()::text"))
+  workspaceId          String    @unique
+  stripeCustomerId     String    @unique
+  stripeSubscriptionId String?   @unique
+  stripePriceId        String?
+  status               SubStatus @default(INACTIVE)
+  currentPeriodEnd     DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+// ---------------------------------------------------------------------------
+// Custom domains (pro+ feature)
+// ---------------------------------------------------------------------------
+model Domain {
+  id          String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  workspaceId String
+  domain      String   @unique
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@map("domains")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+enum Plan {
+  FREE
+  STARTER
+  PRO
+  ENTERPRISE
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum QRType {
+  URL
+  VCARD
+  WIFI
+  EMAIL
+  PHONE
+  SMS
+}
+
+enum SubStatus {
+  ACTIVE
+  INACTIVE
+  PAST_DUE
+  CANCELED
+}

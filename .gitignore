@@ -1,0 +1,28 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+.next
+dist
+out
+.turbo
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Prisma
+packages/db/src/generated
+
+# Misc
+.DS_Store
+*.pem
+.vercel
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
