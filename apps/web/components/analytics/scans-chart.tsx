@@ -9,20 +9,61 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import type { DayScan } from "@/lib/analytics";
+import type { DayScan, TimeGranularity, QRRange } from "@/lib/analytics";
 
-function fmtDate(iso: string) {
-  const d = new Date(iso + "T00:00:00");
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function makeFormatter(
+  granularity: TimeGranularity,
+  range: QRRange
+): (v: string) => string {
+  if (granularity === "hour") {
+    return (iso: string) => {
+      const d = new Date(iso);
+      const h = d.getUTCHours();
+      if (h === 0) return "12am";
+      if (h < 12) return `${h}am`;
+      if (h === 12) return "12pm";
+      return `${h - 12}pm`;
+    };
+  }
+  if (granularity === "week" || granularity === "day") {
+    return (iso: string) => {
+      const d = new Date(iso + "T00:00:00Z");
+      if (range === "7d") {
+        return d.toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" });
+      }
+      return d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC",
+      });
+    };
+  }
+  return (v: string) => v;
 }
 
-export function ScansChart({ data }: { data: DayScan[] }) {
+export function ScansChart({
+  data,
+  granularity = "day",
+  range = "30d",
+}: {
+  data: DayScan[];
+  granularity?: TimeGranularity;
+  range?: QRRange;
+}) {
   const hasData = data.some((d) => d.scans > 0);
+  const fmt = makeFormatter(granularity, range);
+
+  const interval =
+    data.length <= 7
+      ? 0
+      : data.length <= 24
+      ? Math.floor(data.length / 6)
+      : Math.floor(data.length / 8);
 
   if (!hasData) {
     return (
       <div className="flex h-[160px] items-center justify-center rounded-lg border border-dashed">
-        <p className="text-sm text-muted-foreground">No scans in the last 30 days</p>
+        <p className="text-sm text-muted-foreground">No scans in this period</p>
       </div>
     );
   }
@@ -43,11 +84,11 @@ export function ScansChart({ data }: { data: DayScan[] }) {
         />
         <XAxis
           dataKey="date"
-          tickFormatter={fmtDate}
+          tickFormatter={fmt}
           tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
           tickLine={false}
           axisLine={false}
-          interval={6}
+          interval={interval}
         />
         <YAxis
           allowDecimals={false}
@@ -58,7 +99,7 @@ export function ScansChart({ data }: { data: DayScan[] }) {
         />
         <Tooltip
           formatter={(v) => [(v as number).toLocaleString(), "Scans"]}
-          labelFormatter={(label) => fmtDate(String(label))}
+          labelFormatter={(label) => fmt(String(label))}
           contentStyle={{
             background: "var(--card)",
             border: "1px solid var(--border)",

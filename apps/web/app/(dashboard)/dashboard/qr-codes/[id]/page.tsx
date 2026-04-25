@@ -8,6 +8,7 @@ import { shortCodeUrl } from "@/lib/qr";
 import { EditQRForm } from "@/components/qr/edit-qr-form";
 import { QRStudio } from "@/components/qr/qr-studio";
 import { Button } from "@/components/ui/button";
+import { ExportDropdown } from "@/components/analytics/export-dropdown";
 import { DEFAULT_SETTINGS } from "@/lib/qr-design-types";
 import type { DbQRCode, DbQRDesign } from "@/lib/database.types";
 import type { QRDesignSettings } from "@/lib/qr-design-types";
@@ -76,12 +77,15 @@ export default async function EditQRCodePage({
               {redirectUrl}
             </p>
           </div>
-          <Button asChild variant="outline" size="sm" className="shrink-0">
-            <Link href={`/dashboard/qr-codes/${qrCode.id}/analytics`}>
-              <BarChart2 className="mr-1.5 h-3.5 w-3.5" />
-              Analytics
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2 shrink-0">
+            <ExportDropdown qrCodeId={qrCode.id} showImage />
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/dashboard/qr-codes/${qrCode.id}/analytics`}>
+                <BarChart2 className="mr-1.5 h-3.5 w-3.5" />
+                Analytics
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
 
