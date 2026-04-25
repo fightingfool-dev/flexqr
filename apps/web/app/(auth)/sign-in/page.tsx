@@ -21,7 +21,7 @@ export default function SignInPage({
     <Card>
       <CardHeader>
         <CardTitle>Welcome back</CardTitle>
-        <CardDescription>Sign in to your FlexQR account.</CardDescription>
+        <CardDescription>Sign in to your AnalogQR account.</CardDescription>
       </CardHeader>
       <CardContent>
         <SignInForm searchParams={searchParams} />

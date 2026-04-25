@@ -7,7 +7,7 @@ export function track(event: string, properties?: TrackProperties): void {
   if (typeof window === "undefined") return;
 
   if (process.env.NODE_ENV === "development") {
-    console.log("[FlexQR Analytics]", {
+    console.log("[AnalogQR Analytics]", {
       event,
       properties: properties ?? {},
       timestamp: new Date().toISOString(),

@@ -22,8 +22,8 @@ export function FinalCtaSection() {
 
       <footer className="border-t px-4 sm:px-6 py-8">
         <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">FlexQR</span>
-          <span>© {new Date().getFullYear()} FlexQR. All rights reserved.</span>
+          <span className="font-semibold text-foreground">AnalogQR</span>
+          <span>© {new Date().getFullYear()} AnalogQR. All rights reserved.</span>
           <div className="flex gap-4">
             <Link href="#" className="hover:text-foreground transition-colors">
               Privacy

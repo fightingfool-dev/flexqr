@@ -16,15 +16,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "https://flexqr.app"
+    process.env.NEXT_PUBLIC_APP_URL ?? "https://www.analogqr.com"
   ),
   title: {
-    default: "FlexQR",
-    template: "%s | FlexQR",
+    default: "AnalogQR",
+    template: "%s | AnalogQR",
   },
-  description: "Dynamic QR codes that you can update anytime.",
+  description: "Create dynamic QR codes and track real-world scans.",
   openGraph: {
-    siteName: "FlexQR",
+    siteName: "AnalogQR",
     locale: "en_US",
     type: "website",
   },

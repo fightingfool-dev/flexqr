@@ -29,7 +29,7 @@ export const env = {
 
   // Email
   RESEND_API_KEY: process.env.RESEND_API_KEY,
-  RESEND_FROM: process.env.RESEND_FROM_EMAIL ?? "noreply@flexqr.com",
+  RESEND_FROM: process.env.RESEND_FROM_EMAIL ?? "noreply@analogqr.com",
 
   // Redis (redirect cache)
   UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,

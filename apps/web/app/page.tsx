@@ -20,13 +20,13 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "QR Code Generator with Analytics | FlexQR",
+    title: "QR Code Generator with Analytics | AnalogQR",
     description: "Create dynamic QR codes and track scans in real time",
     url: "/",
     type: "website",
   },
   twitter: {
-    title: "QR Code Generator with Analytics | FlexQR",
+    title: "QR Code Generator with Analytics | AnalogQR",
     description: "Create dynamic QR codes and track scans in real time",
   },
 };
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const [user, qrSvg] = await Promise.all([
     getUser(),
-    generateQRSvg("https://flexqr.app/r/summer24"),
+    generateQRSvg("https://www.analogqr.com/r/summer24"),
   ]);
 
   const isLoggedIn = !!user;

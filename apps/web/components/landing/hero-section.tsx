@@ -16,7 +16,7 @@ function QRCard({ qrSvg }: { qrSvg: string }) {
       />
       <div className="text-center space-y-1">
         <p className="text-xs font-mono text-muted-foreground">
-          flexqr.app/r/summer24
+          analogqr.com/r/summer24
         </p>
         <Badge variant="secondary" className="text-xs">
           Active · 1,284 scans
