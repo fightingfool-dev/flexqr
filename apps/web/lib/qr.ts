@@ -27,7 +27,8 @@ export async function generateShortCode(): Promise<string> {
 
 // Returns the full redirect URL for a given short code.
 export function shortCodeUrl(shortCode: string): string {
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const raw = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const base = new URL(raw).origin;
   return `${base}/r/${shortCode}`;
 }
 

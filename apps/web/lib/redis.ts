@@ -18,7 +18,11 @@ export async function getCachedEntry(
   shortCode: string
 ): Promise<CacheEntry | null> {
   if (!redis) return null;
-  return redis.get<CacheEntry>(`r:${shortCode}`);
+  try {
+    return await redis.get<CacheEntry>(`r:${shortCode}`);
+  } catch {
+    return null;
+  }
 }
 
 export async function setCachedEntry(
@@ -26,10 +30,18 @@ export async function setCachedEntry(
   entry: CacheEntry
 ): Promise<void> {
   if (!redis) return;
-  await redis.set(`r:${shortCode}`, entry, { ex: TTL });
+  try {
+    await redis.set(`r:${shortCode}`, entry, { ex: TTL });
+  } catch {
+    // non-fatal — next request falls back to Supabase
+  }
 }
 
 export async function invalidateCachedEntry(shortCode: string): Promise<void> {
   if (!redis) return;
-  await redis.del(`r:${shortCode}`);
+  try {
+    await redis.del(`r:${shortCode}`);
+  } catch {
+    // non-fatal — stale entry expires after TTL
+  }
 }
