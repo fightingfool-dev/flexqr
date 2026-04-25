@@ -48,7 +48,12 @@ export function QRCodeCard({ qrCode, shortUrl }: Props) {
       {/* Main content */}
       <div className="flex-1 min-w-0 space-y-1">
         <div className="flex items-center gap-2">
-          <span className="font-medium truncate">{qrCode.name}</span>
+          <Link
+            href={`/dashboard/qr-codes/${qrCode.id}`}
+            className="font-medium truncate hover:text-primary transition-colors"
+          >
+            {qrCode.name}
+          </Link>
           <Badge
             variant={qrCode.isActive ? "default" : "secondary"}
             className="shrink-0"

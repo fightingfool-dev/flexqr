@@ -56,6 +56,7 @@ export type DbQRDesign = {
   logoUrl: string | null;
   logoSize: number;
   errorCorrection: string;
+  settings: Record<string, unknown>;
 };
 
 export type DbScan = {

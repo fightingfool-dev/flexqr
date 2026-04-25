@@ -75,17 +75,21 @@ export async function createQRCode(
       shortCode = await generateShortCode();
     }
 
-    const { error } = await supabaseAdmin.from("qr_codes").insert({
-      workspaceId: workspace.id,
-      shortCode,
-      name,
-      destinationUrl,
-      type: "URL",
-      tags: [],
-      updatedAt: new Date().toISOString(),
-    });
+    const { data: created, error } = await supabaseAdmin
+      .from("qr_codes")
+      .insert({
+        workspaceId: workspace.id,
+        shortCode,
+        name,
+        destinationUrl,
+        type: "URL",
+        tags: [],
+        updatedAt: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
 
-    if (error) return { error: error.message };
+    if (error || !created) return { error: error?.message ?? "Failed to create QR code." };
 
     revalidatePath("/dashboard/qr-codes");
     revalidatePath("/dashboard");
@@ -93,7 +97,7 @@ export async function createQRCode(
       insertEvent("qr_created", { name, workspaceId: workspace.id }, { userId: user.id })
         .catch((err) => logError("tracking:qr_created", err))
     );
-    redirect("/dashboard/qr-codes");
+    redirect(`/dashboard/qr-codes/${created.id}?new=1`);
   } catch (err) {
     if (isNextInternalError(err)) throw err;
     logError("action:createQRCode", err);

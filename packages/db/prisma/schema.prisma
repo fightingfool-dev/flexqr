@@ -95,6 +95,7 @@ model QRDesign {
   logoUrl         String?
   logoSize        Float   @default(0.2)
   errorCorrection String  @default("M") // L | M | Q | H
+  settings        Json    @default("{}")
 
   qrCode QRCode @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
 

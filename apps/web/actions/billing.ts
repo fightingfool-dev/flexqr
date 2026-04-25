@@ -35,12 +35,14 @@ export async function createCheckoutSession(
       customerId = customer.id;
     }
 
+    const appUrl = new URL(env.APP_URL).origin;
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${env.APP_URL}/dashboard/settings?billing=success`,
-      cancel_url: `${env.APP_URL}/dashboard/settings`,
+      success_url: `${appUrl}/dashboard/settings?billing=success`,
+      cancel_url: `${appUrl}/dashboard/settings?billing=cancelled`,
       metadata: { workspaceId: workspace.id },
       subscription_data: { metadata: { workspaceId: workspace.id } },
       allow_promotion_codes: true,
@@ -71,9 +73,11 @@ export async function createPortalSession(_formData: FormData): Promise<void> {
 
     if (!sub) redirect("/dashboard/settings");
 
+    const appUrl = new URL(env.APP_URL).origin;
+
     const session = await stripe.billingPortal.sessions.create({
       customer: sub.stripeCustomerId as string,
-      return_url: `${env.APP_URL}/dashboard/settings`,
+      return_url: `${appUrl}/dashboard/settings`,
     });
 
     redirect(session.url);

@@ -59,19 +59,23 @@ export default async function CreateConfirmPage({
 
   const shortCode = await generateShortCode();
 
-  const { error } = await supabaseAdmin.from("qr_codes").insert({
-    workspaceId: workspace.id,
-    shortCode,
-    name,
-    destinationUrl,
-    type: "URL",
-    tags: [],
-    updatedAt: new Date().toISOString(),
-  });
+  const { data: created, error } = await supabaseAdmin
+    .from("qr_codes")
+    .insert({
+      workspaceId: workspace.id,
+      shortCode,
+      name,
+      destinationUrl,
+      type: "URL",
+      tags: [],
+      updatedAt: new Date().toISOString(),
+    })
+    .select("id")
+    .single();
 
-  if (error) redirect(`/create?url=${encodedUrl}`);
+  if (error || !created) redirect(`/create?url=${encodedUrl}`);
 
   revalidatePath("/dashboard/qr-codes");
   revalidatePath("/dashboard");
-  redirect("/dashboard/qr-codes?created=1");
+  redirect(`/dashboard/qr-codes/${created.id}?new=1`);
 }
