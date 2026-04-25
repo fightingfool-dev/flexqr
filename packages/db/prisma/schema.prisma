@@ -73,6 +73,7 @@ model QRCode {
   imageUrl       String? // pre-rendered PNG/SVG stored in blob storage
   scanCount      Int      @default(0) // denormalised for fast list display
   tags           String[]
+  contentJson    Json     @default("{}") // type-specific payload (vCard fields, WiFi params, etc.)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -196,6 +197,12 @@ enum QRType {
   EMAIL
   PHONE
   SMS
+  PDF
+  IMAGE
+  VIDEO
+  APP_LINK
+  WHATSAPP
+  FEEDBACK
 }
 
 enum SubStatus {

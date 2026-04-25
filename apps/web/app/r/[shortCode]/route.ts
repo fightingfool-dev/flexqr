@@ -65,7 +65,7 @@ export async function GET(
     if (!entry) {
       const { data } = await supabaseAdmin
         .from("qr_codes")
-        .select("id, destinationUrl, isActive")
+        .select("id, destinationUrl, isActive, type, contentJson")
         .eq("shortCode", shortCode)
         .single();
 
@@ -73,14 +73,30 @@ export async function GET(
         return NextResponse.json({ error: "Not found" }, { status: 404 });
       }
 
-      entry = { id: data.id as string, url: data.destinationUrl as string };
+      entry = {
+        id: data.id as string,
+        url: data.destinationUrl as string,
+        type: data.type as string,
+        contentJson: data.contentJson as Record<string, unknown> | undefined,
+      };
       await setCachedEntry(shortCode, entry);
     }
 
     const capturedEntry = entry;
     after(() => logScan(capturedEntry.id, request));
 
-    return NextResponse.redirect(capturedEntry.url, { status: 307 });
+    let target = capturedEntry.url;
+    if (capturedEntry.type === "APP_LINK" && capturedEntry.contentJson) {
+      const ua = request.headers.get("user-agent") ?? "";
+      const { iosUrl, androidUrl } = capturedEntry.contentJson as {
+        iosUrl?: string;
+        androidUrl?: string;
+      };
+      if (/iphone|ipad|ipod/i.test(ua) && iosUrl) target = iosUrl;
+      else if (/android/i.test(ua) && androidUrl) target = androidUrl;
+    }
+
+    return NextResponse.redirect(target, { status: 307 });
   } catch (err) {
     logError("redirect:GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

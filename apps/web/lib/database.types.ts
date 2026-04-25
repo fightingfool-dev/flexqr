@@ -3,7 +3,19 @@
 
 export type Plan = "FREE" | "STARTER" | "PRO" | "ENTERPRISE";
 export type Role = "OWNER" | "ADMIN" | "MEMBER";
-export type QRType = "URL" | "VCARD" | "WIFI" | "EMAIL" | "PHONE" | "SMS";
+export type QRType =
+  | "URL"
+  | "VCARD"
+  | "WIFI"
+  | "EMAIL"
+  | "PHONE"
+  | "SMS"
+  | "PDF"
+  | "IMAGE"
+  | "VIDEO"
+  | "APP_LINK"
+  | "WHATSAPP"
+  | "FEEDBACK";
 export type SubStatus = "ACTIVE" | "INACTIVE" | "PAST_DUE" | "CANCELED";
 
 export type DbUser = {
@@ -42,6 +54,7 @@ export type DbQRCode = {
   imageUrl: string | null;
   scanCount: number;
   tags: string[];
+  contentJson: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 };

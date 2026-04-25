@@ -12,7 +12,12 @@ export const redis: Redis | null =
 // Cache active short codes for 1 hour. Inactive codes are never cached.
 const TTL = 3600;
 
-type CacheEntry = { id: string; url: string };
+export type CacheEntry = {
+  id: string;
+  url: string;
+  type?: string;
+  contentJson?: Record<string, unknown>;
+};
 
 export async function getCachedEntry(
   shortCode: string

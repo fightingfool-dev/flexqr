@@ -4,19 +4,13 @@ import { ChevronLeft } from "lucide-react";
 import { requireUser, getUserWorkspaces } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PLAN_LIMITS } from "@/lib/plans";
-import { CreateQRForm } from "@/components/qr/create-qr-form";
+import { QRBuilder } from "@/components/qr/builder/qr-builder";
 import { PlanLimitPrompt } from "@/components/dashboard/plan-limit-prompt";
 
 export const metadata: Metadata = { title: "Create QR code" };
 
-export default async function NewQRCodePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ prefillUrl?: string }>;
-}) {
+export default async function NewQRCodePage() {
   const user = await requireUser();
-  const { prefillUrl } = await searchParams;
-
   const workspaces = await getUserWorkspaces(user.id);
   const workspace = workspaces[0]!;
 
@@ -31,7 +25,7 @@ export default async function NewQRCodePage({
   const isPaidPlan = workspace.plan !== "FREE";
 
   return (
-    <div className="max-w-lg space-y-6">
+    <div className="max-w-2xl space-y-6">
       <div>
         <Link
           href="/dashboard/qr-codes"
@@ -42,12 +36,9 @@ export default async function NewQRCodePage({
         </Link>
         {!atLimit && (
           <>
-            <h1 className="text-3xl font-semibold tracking-tight">
-              Create QR code
-            </h1>
+            <h1 className="text-3xl font-semibold tracking-tight">Create QR code</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              A short code is generated automatically. You can update the
-              destination URL at any time without reprinting.
+              Choose your content type and customise the design. You can update the destination URL at any time without reprinting.
             </p>
           </>
         )}
@@ -56,7 +47,7 @@ export default async function NewQRCodePage({
       {atLimit ? (
         <PlanLimitPrompt plan={workspace.plan} used={used} />
       ) : (
-        <CreateQRForm defaultDestinationUrl={prefillUrl} isPaidPlan={isPaidPlan} />
+        <QRBuilder isPaidPlan={isPaidPlan} />
       )}
     </div>
   );

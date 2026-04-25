@@ -19,19 +19,21 @@ const PREVIEW_SIZE = 240;
 const DOWNLOAD_SIZE = 1200;
 
 type Props = {
-  qrCodeId: string;
+  qrCodeId?: string;
   url: string;
   filename: string;
-  scanCount: number;
+  scanCount?: number;
   initialSettings: Partial<QRDesignSettings>;
+  onSettingsChange?: (settings: QRDesignSettings) => void;
 };
 
 export function QRStudio({
   qrCodeId,
   url,
   filename,
-  scanCount,
+  scanCount = 0,
   initialSettings,
+  onSettingsChange,
 }: Props) {
   const qrRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,7 +48,11 @@ export function QRStudio({
 
   function updateSettings(patch: Partial<QRDesignSettings>) {
     setSaved(false);
-    setSettings((prev) => ({ ...prev, ...patch }));
+    setSettings((prev) => {
+      const next = { ...prev, ...patch };
+      onSettingsChange?.(next);
+      return next;
+    });
   }
 
   function toggleSection(name: string) {
@@ -145,7 +151,7 @@ export function QRStudio({
   function handleSave() {
     setSaved(false);
     startSave(async () => {
-      await saveQRDesignSettings(qrCodeId, settings);
+      await saveQRDesignSettings(qrCodeId!, settings);
       setSaved(true);
     });
   }
@@ -163,14 +169,16 @@ export function QRStudio({
         </p>
 
         <div className="flex items-center gap-2">
-          <Button size="sm" onClick={handleSave} disabled={saving}>
-            {saving ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />
-            ) : saved ? (
-              <Check className="h-3.5 w-3.5 mr-1" />
-            ) : null}
-            {saving ? "Saving…" : saved ? "Saved" : "Save design"}
-          </Button>
+          {qrCodeId && (
+            <Button size="sm" onClick={handleSave} disabled={saving}>
+              {saving ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />
+              ) : saved ? (
+                <Check className="h-3.5 w-3.5 mr-1" />
+              ) : null}
+              {saving ? "Saving…" : saved ? "Saved" : "Save design"}
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={handleDownload}>
             <Download className="h-3.5 w-3.5 mr-1" />
             PNG
