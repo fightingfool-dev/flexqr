@@ -12,11 +12,11 @@ import { GoogleButton, OrDivider } from "@/components/auth/google-button";
 type State = { error?: string };
 
 type Props = {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 };
 
 export function SignInForm({ searchParams }: Props) {
-  const { next } = use(searchParams);
+  const { next, error: oauthError } = use(searchParams);
   const [state, action, pending] = useActionState<State, FormData>(signIn, {});
 
   return (
@@ -24,6 +24,11 @@ export function SignInForm({ searchParams }: Props) {
       <GoogleButton next={next} />
       <OrDivider />
     <form action={action} className="space-y-4">
+      {oauthError && (
+        <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          Google sign-in failed: {oauthError}
+        </p>
+      )}
       {state.error && (
         <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {state.error}

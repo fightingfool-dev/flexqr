@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: "Sign in" };
 export default function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 }) {
   return (
     <Card>
