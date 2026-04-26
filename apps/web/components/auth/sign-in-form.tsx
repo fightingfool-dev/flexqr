@@ -7,6 +7,7 @@ import { signIn } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GoogleButton, OrDivider } from "@/components/auth/google-button";
 
 type State = { error?: string };
 
@@ -19,6 +20,9 @@ export function SignInForm({ searchParams }: Props) {
   const [state, action, pending] = useActionState<State, FormData>(signIn, {});
 
   return (
+    <div className="space-y-4">
+      <GoogleButton next={next} />
+      <OrDivider />
     <form action={action} className="space-y-4">
       {state.error && (
         <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -59,5 +63,6 @@ export function SignInForm({ searchParams }: Props) {
         )}
       </Button>
     </form>
+    </div>
   );
 }
