@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const STEPS = [
-  { n: 1, label: "Enter your link" },
-  { n: 2, label: "Generate your QR code" },
-  { n: 3, label: "Print or share, and track every scan" },
+  { n: 1, label: "Paste your link" },
+  { n: 2, label: "Generate your QR" },
+  { n: 3, label: "Track every scan" },
 ];
 
 export function HowItWorksSection() {
@@ -15,7 +15,7 @@ export function HowItWorksSection() {
     >
       <div className="mx-auto max-w-6xl text-center space-y-10">
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-          From idea to live QR in under 10 seconds
+          From link to trackable QR in seconds
         </h2>
 
         <div className="grid gap-6 sm:grid-cols-3 max-w-3xl mx-auto">
