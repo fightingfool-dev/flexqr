@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { createClient } from "@/lib/supabase/client";
 
 function GoogleIcon() {
   return (
@@ -24,18 +26,28 @@ function GoogleIcon() {
 }
 
 export function GoogleButton({ next }: { next?: string }) {
-  const href = next
-    ? `/api/auth/google?next=${encodeURIComponent(next)}`
-    : "/api/auth/google";
+  const safeNext = next?.startsWith("/") ? next : "/dashboard";
+
+  async function handleClick() {
+    const supabase = createClient();
+    const origin = window.location.origin;
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(safeNext)}`,
+      },
+    });
+  }
 
   return (
-    <Link
-      href={href}
+    <button
+      type="button"
+      onClick={handleClick}
       className="inline-flex w-full items-center justify-center gap-2.5 rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <GoogleIcon />
       Continue with Google
-    </Link>
+    </button>
   );
 }
 
