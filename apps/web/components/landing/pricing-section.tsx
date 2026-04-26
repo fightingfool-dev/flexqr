@@ -58,7 +58,7 @@ export function PricingSection() {
             Simple, honest pricing
           </h2>
           <p className="text-muted-foreground">
-            No credit card required to start.
+            Start free. Upgrade when you need more. Cancel anytime.
           </p>
         </div>
 
@@ -117,6 +117,10 @@ export function PricingSection() {
             </Card>
           ))}
         </div>
+
+        <p className="text-center text-xs text-muted-foreground">
+          All plans include dynamic redirects and scan analytics · No hidden fees · Cancel anytime
+        </p>
       </div>
     </section>
   );

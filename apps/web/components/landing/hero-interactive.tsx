@@ -221,9 +221,11 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
             </Button>
           </div>
 
-          <p className="text-sm text-muted-foreground -mt-4">
-            Free plan available · No credit card required
-          </p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 -mt-4">
+            <span className="text-sm text-muted-foreground">Free plan available</span>
+            <span className="text-sm text-muted-foreground">No credit card required</span>
+            <span className="text-sm text-muted-foreground">Cancel anytime</span>
+          </div>
         </div>
 
         {/* Right column: live QR preview */}

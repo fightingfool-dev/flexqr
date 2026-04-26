@@ -34,10 +34,13 @@ export function UseCasesSection() {
           ))}
         </div>
 
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <Button asChild size="lg" className="text-base px-8">
-            <Link href="/sign-up">Get started free</Link>
+            <Link href="/sign-up">Start for free — no card needed</Link>
           </Button>
+          <p className="text-xs text-muted-foreground">
+            Takes less than 60 seconds to set up
+          </p>
         </div>
       </div>
     </section>
