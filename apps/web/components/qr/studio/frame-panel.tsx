@@ -1,8 +1,9 @@
 "use client";
 
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { FRAME_TYPES, type QRDesignSettings, type FrameType } from "@/lib/qr-design-types";
+import { type QRDesignSettings, type FrameType } from "@/lib/qr-design-types";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -10,36 +11,69 @@ type Props = {
   onChange: (patch: Partial<QRDesignSettings>) => void;
 };
 
+const FRAME_OPTIONS: {
+  value: FrameType;
+  label: string;
+  direction?: "up" | "down";
+}[] = [
+  { value: "none", label: "None" },
+  { value: "simple-bottom", label: "Label", direction: "down" },
+  { value: "simple-top", label: "Label", direction: "up" },
+  { value: "banner-bottom", label: "Banner", direction: "down" },
+  { value: "banner-top", label: "Banner", direction: "up" },
+  { value: "rounded-bottom", label: "Rounded", direction: "down" },
+  { value: "rounded-top", label: "Rounded", direction: "up" },
+  { value: "speech", label: "Speech", direction: "down" },
+  { value: "speech-flipped", label: "Speech", direction: "up" },
+  { value: "badge", label: "Badge" },
+  { value: "circle", label: "Circle" },
+  { value: "box", label: "Box" },
+];
+
 export function FramePanel({ settings, onChange }: Props) {
   const hasFrame = settings.frameType !== "none";
 
+  function handleSelect(value: FrameType) {
+    console.log("frameType:", value);
+    onChange({ frameType: value });
+  }
+
   return (
     <div className="space-y-4">
-      {/* Frame type selector */}
+      {/* Frame type grid */}
       <div>
-        <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 block">
+        <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2.5 block">
           Frame Type
         </Label>
-        <div className="grid grid-cols-4 gap-1.5 max-h-40 overflow-y-auto pr-1">
-          {FRAME_TYPES.map((ft) => (
-            <button
-              key={ft.value}
-              type="button"
-              onClick={() => onChange({ frameType: ft.value as FrameType })}
-              className={cn(
-                "rounded-md border px-2 py-1.5 text-xs transition-colors text-center",
-                settings.frameType === ft.value
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-input bg-background hover:bg-muted"
-              )}
-            >
-              {ft.label}
-            </button>
-          ))}
+        <div className="grid grid-cols-3 gap-2">
+          {FRAME_OPTIONS.map((ft) => {
+            const isSelected = settings.frameType === ft.value;
+            return (
+              <button
+                key={ft.value}
+                type="button"
+                onClick={() => handleSelect(ft.value)}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 rounded-lg border px-2 py-2.5 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                  isSelected
+                    ? "border-primary bg-primary text-primary-foreground shadow-md"
+                    : "border-input bg-background text-foreground hover:bg-muted hover:border-primary/50"
+                )}
+              >
+                <span>{ft.label}</span>
+                {ft.direction === "down" && (
+                  <ArrowDown className="h-3.5 w-3.5 shrink-0" />
+                )}
+                {ft.direction === "up" && (
+                  <ArrowUp className="h-3.5 w-3.5 shrink-0" />
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Frame text + colors — only shown when a frame is active */}
+      {/* Controls — only when a frame is active */}
       {hasFrame && (
         <>
           <div className="space-y-1.5">

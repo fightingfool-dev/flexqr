@@ -44,12 +44,17 @@ export function AppSidebar({ workspaceName, userEmail }: Props) {
 
   return (
     <Sidebar>
-      <SidebarHeader className="px-4 py-3">
+      {/* Brand + workspace */}
+      <SidebarHeader className="px-4 py-3 space-y-2.5">
+        <Link href="/" className="font-bold text-lg tracking-tight leading-none">
+          <span className="text-foreground">Analog</span>
+          <span className="text-primary">QR</span>
+        </Link>
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-[10px] font-bold text-primary shrink-0">
             {initials}
           </div>
-          <span className="font-semibold text-sm truncate">{workspaceName}</span>
+          <span className="text-sm text-muted-foreground truncate">{workspaceName}</span>
         </div>
       </SidebarHeader>
 
@@ -63,7 +68,10 @@ export function AppSidebar({ workspaceName, userEmail }: Props) {
                 <SidebarMenuItem key={href}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === href || (href !== "/dashboard" && pathname.startsWith(href))}
+                    isActive={
+                      pathname === href ||
+                      (href !== "/dashboard" && pathname.startsWith(href))
+                    }
                   >
                     <Link href={href} className="flex items-center gap-2">
                       <Icon className="h-4 w-4" />
@@ -79,31 +87,43 @@ export function AppSidebar({ workspaceName, userEmail }: Props) {
 
       <SidebarSeparator />
 
-      <SidebarFooter className="px-2 py-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <div className="flex items-center gap-2 px-2 py-1.5">
-              <Avatar className="h-6 w-6">
-                <AvatarFallback className="text-xs">{userInitial}</AvatarFallback>
-              </Avatar>
-              <span className="flex-1 truncate text-sm text-muted-foreground">
+      {/* User identity + sign-out */}
+      <SidebarFooter className="px-3 py-3">
+        <div className="rounded-lg border bg-muted/30 p-3 space-y-3">
+          {/* Account info */}
+          <div className="flex items-center gap-2.5">
+            <Avatar className="h-8 w-8 shrink-0">
+              <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
+                {userInitial}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <p className="text-[10px] text-muted-foreground leading-none mb-0.5">
+                Signed in as
+              </p>
+              <p className="text-xs font-medium text-foreground truncate">
                 {userEmail}
-              </span>
-              <form action={signOut}>
-                <button
-                  type="submit"
-                  title="Sign out"
-                  className={cn(
-                    "flex h-6 w-6 items-center justify-center rounded hover:bg-accent",
-                    "text-muted-foreground hover:text-foreground transition-colors"
-                  )}
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                </button>
-              </form>
+              </p>
             </div>
-          </SidebarMenuItem>
-        </SidebarMenu>
+          </div>
+
+          {/* Sign-out: full-width, large tap target, destructive accent */}
+          <form action={signOut} className="w-full">
+            <button
+              type="submit"
+              className={cn(
+                "w-full flex items-center justify-center gap-2 rounded-md px-3 py-2",
+                "text-sm font-semibold text-destructive",
+                "border border-destructive/40 bg-transparent",
+                "hover:bg-destructive hover:text-destructive-foreground",
+                "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
+              )}
+            >
+              <LogOut className="h-4 w-4 shrink-0" />
+              Sign out
+            </button>
+          </form>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
