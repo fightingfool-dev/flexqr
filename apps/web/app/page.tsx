@@ -43,7 +43,7 @@ export default async function HomePage() {
     <>
       <LandingNav isLoggedIn={isLoggedIn} />
 
-      <main className="pb-16 md:pb-0">
+      <main className="pb-24 md:pb-0">
         <HeroSection isLoggedIn={isLoggedIn} qrSvg={qrSvg} />
         <HowItWorksSection />
         <FeaturesSection />

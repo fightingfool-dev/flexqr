@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { requireUser, getUserWorkspaces } from "@/lib/auth";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
+import { DashboardMobileHeader } from "@/components/dashboard/mobile-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default async function DashboardLayout({
@@ -15,7 +16,6 @@ export default async function DashboardLayout({
     redirect("/onboarding");
   }
 
-  // Use the first workspace for now; multi-workspace switching comes later.
   const workspace = workspaces[0]!;
 
   return (
@@ -25,7 +25,10 @@ export default async function DashboardLayout({
         userEmail={user.email ?? ""}
       />
       <SidebarInset>
-        <main className="flex flex-1 flex-col gap-4 p-8">{children}</main>
+        <DashboardMobileHeader />
+        <main className="flex flex-1 flex-col gap-4 p-4 sm:p-6 md:p-8">
+          {children}
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

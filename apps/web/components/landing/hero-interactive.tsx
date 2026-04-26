@@ -158,20 +158,17 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
   }
 
   return (
-    <section className="px-4 sm:px-6 py-20 sm:py-28 mx-auto max-w-6xl">
+    <section className="px-4 sm:px-6 py-12 sm:py-20 lg:py-28 mx-auto max-w-6xl">
       <div className="grid gap-12 lg:gap-16 lg:grid-cols-[1fr,320px] lg:items-center">
         {/* Left column: copy + input */}
         <div className="space-y-8">
           {/* Headline */}
-          <div className="space-y-5">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]">
-              QR codes that update.{" "}
-              <span className="text-primary">Analytics that reveal.</span>
+          <div className="space-y-4">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.15]">
+              Create dynamic QR codes and update anytime
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-xl">
-              Create dynamic QR codes, change the destination anytime, and track
-              every scan — devices, locations, and performance, from one
-              dashboard.
+            <p className="text-base sm:text-lg font-semibold leading-snug text-primary">
+              Track every scan across devices, locations, and performance in one dashboard
             </p>
           </div>
 
@@ -183,23 +180,23 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
                 placeholder="https://your-link.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="h-11 text-base flex-1"
+                className="h-11 text-base flex-1 min-w-0"
                 autoComplete="off"
               />
               <Button
                 type="submit"
                 size="lg"
-                className="h-11 px-5 shrink-0"
+                className="h-11 px-4 shrink-0"
                 disabled={!url.trim()}
               >
-                Generate
-                <ArrowRight className="h-4 w-4 ml-1.5" />
+                <span className="hidden sm:inline mr-1.5">Generate</span>
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
               {url.trim()
                 ? "Press Generate to create your trackable QR code"
-                : "Paste any link to see your QR update live →"}
+                : "Paste any link to see your QR preview update live"}
             </p>
           </form>
 

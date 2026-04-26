@@ -68,6 +68,7 @@ export function AppSidebar({ workspaceName, userEmail }: Props) {
                 <SidebarMenuItem key={href}>
                   <SidebarMenuButton
                     asChild
+                    size="lg"
                     isActive={
                       pathname === href ||
                       (href !== "/dashboard" && pathname.startsWith(href))
@@ -112,7 +113,7 @@ export function AppSidebar({ workspaceName, userEmail }: Props) {
             <button
               type="submit"
               className={cn(
-                "w-full flex items-center justify-center gap-2 rounded-md px-3 py-2",
+                "w-full flex items-center justify-center gap-2 rounded-md px-3 py-2.5 min-h-[44px]",
                 "text-sm font-semibold text-destructive",
                 "border border-destructive/40 bg-transparent",
                 "hover:bg-destructive hover:text-destructive-foreground",
