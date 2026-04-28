@@ -1,10 +1,14 @@
 /**
- * One-time fix: looks up a customer by email in Supabase and upgrades their plan.
+ * One-time fix: looks up a customer by email in Supabase and syncs their Stripe
+ * subscription + plan into the database.
  *
- * With live Stripe key (full sync):
+ * Full sync using live Stripe key passed inline (does not touch .env.local):
+ *   node --env-file=.env.local scripts/fix-customer.mjs fuladija@gmail.com sk_live_...
+ *
+ * Full sync when .env.local already has the live key:
  *   node --env-file=.env.local scripts/fix-customer.mjs fuladija@gmail.com
  *
- * With plan override (skips Stripe lookup, use when .env.local has test keys):
+ * Plan-only override (skips Stripe, use as last resort):
  *   node --env-file=.env.local scripts/fix-customer.mjs fuladija@gmail.com STARTER
  *   node --env-file=.env.local scripts/fix-customer.mjs fuladija@gmail.com PRO
  */
@@ -13,20 +17,35 @@ import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 
 const EMAIL = process.argv[2];
-const PLAN_OVERRIDE = process.argv[3]?.toUpperCase();
+const THIRD_ARG = process.argv[3];
+
+// Third arg is either a live Stripe key (sk_live_/rk_live_) or a plan override word
+const LIVE_KEY_ARG = THIRD_ARG?.startsWith("sk_live_") || THIRD_ARG?.startsWith("rk_live_")
+  ? THIRD_ARG
+  : null;
+const PLAN_OVERRIDE = !LIVE_KEY_ARG && THIRD_ARG
+  ? THIRD_ARG.toUpperCase()
+  : null;
 
 if (!EMAIL) {
-  console.error("Usage: node --env-file=.env.local scripts/fix-customer.mjs <email> [STARTER|PRO]");
+  console.error(
+    "Usage:\n" +
+    "  node --env-file=.env.local scripts/fix-customer.mjs <email> [sk_live_...]\n" +
+    "  node --env-file=.env.local scripts/fix-customer.mjs <email> [STARTER|PRO]"
+  );
   process.exit(1);
 }
 
 const {
   NEXT_PUBLIC_SUPABASE_URL: SUPABASE_URL,
   SUPABASE_SERVICE_ROLE_KEY,
-  STRIPE_SECRET_KEY,
+  STRIPE_SECRET_KEY: STRIPE_KEY_FROM_ENV,
   STRIPE_PRICE_STARTER_MONTHLY,
   STRIPE_PRICE_PRO_MONTHLY,
 } = process.env;
+
+// Live key arg takes priority over whatever is in .env.local
+const STRIPE_SECRET_KEY = LIVE_KEY_ARG ?? STRIPE_KEY_FROM_ENV;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !STRIPE_SECRET_KEY) {
   console.error("Missing env vars — make sure .env.local has SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY");

@@ -36,6 +36,7 @@ export default async function SettingsPage({
   const workspaces = await getUserWorkspaces(user.id);
   const workspace = workspaces[0]!;
   const { billing } = await searchParams;
+  const portalUnavailable = billing === "no_portal";
 
   const [{ count: qrCount }, { data: subData }] = await Promise.all([
     supabaseAdmin
@@ -73,6 +74,15 @@ export default async function SettingsPage({
           Manage your workspace and billing.
         </p>
       </div>
+
+      {/* Portal unavailable banner */}
+      {portalUnavailable && (
+        <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+          Subscription management is temporarily unavailable. Please contact{" "}
+          <a href="mailto:support@analogqr.com" className="underline underline-offset-2">support@analogqr.com</a>{" "}
+          to make changes.
+        </div>
+      )}
 
       {/* Flash banner + race-condition poller */}
       {billing === "success" && (

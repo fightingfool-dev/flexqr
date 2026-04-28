@@ -69,9 +69,9 @@ export async function createPortalSession(_formData: FormData): Promise<void> {
       .from("subscriptions")
       .select("stripeCustomerId")
       .eq("workspaceId", workspace.id)
-      .single();
+      .maybeSingle();
 
-    if (!sub) redirect("/dashboard/settings");
+    if (!sub?.stripeCustomerId) redirect("/dashboard/settings?billing=no_portal");
 
     const appUrl = new URL(env.APP_URL).origin;
 
