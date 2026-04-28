@@ -18,13 +18,9 @@ const FRAME_OPTIONS: {
 }[] = [
   { value: "none", label: "None" },
   { value: "simple-bottom", label: "Label", direction: "down" },
-  { value: "simple-top", label: "Label", direction: "up" },
   { value: "banner-bottom", label: "Banner", direction: "down" },
-  { value: "banner-top", label: "Banner", direction: "up" },
   { value: "rounded-bottom", label: "Rounded", direction: "down" },
-  { value: "rounded-top", label: "Rounded", direction: "up" },
   { value: "speech", label: "Speech", direction: "down" },
-  { value: "speech-flipped", label: "Speech", direction: "up" },
   { value: "badge", label: "Badge" },
   { value: "circle", label: "Circle" },
   { value: "box", label: "Box" },
@@ -34,7 +30,6 @@ export function FramePanel({ settings, onChange }: Props) {
   const hasFrame = settings.frameType !== "none";
 
   function handleSelect(value: FrameType) {
-    console.log("frameType:", value);
     onChange({ frameType: value });
   }
 

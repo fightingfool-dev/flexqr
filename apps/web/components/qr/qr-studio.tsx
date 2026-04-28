@@ -73,9 +73,8 @@ export function QRStudio({
 
       const options = buildQROptions(url, settings, PREVIEW_SIZE);
 
-      if (!qrInstanceRef.current) {
+      if (!qrRef.current.hasChildNodes()) {
         qrInstanceRef.current = new QRCodeStyling(options);
-        qrRef.current.innerHTML = "";
         qrInstanceRef.current.append(qrRef.current);
       } else {
         qrInstanceRef.current.update(options);
@@ -170,7 +169,7 @@ export function QRStudio({
     <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
       {/* Left: preview + download controls */}
       <div className="flex flex-col items-center gap-4 lg:w-64 lg:shrink-0">
-        <QRFrameWrapper settings={settings}>
+        <QRFrameWrapper key={settings.frameType} settings={settings}>
           <div ref={qrRef} className="leading-none block" />
         </QRFrameWrapper>
 
