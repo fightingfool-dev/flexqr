@@ -17,6 +17,9 @@ export default async function SignUpPage({
 }: {
   searchParams: Promise<{ prefillUrl?: string; next?: string }>;
 }) {
+  const { next } = await searchParams;
+  const signInHref = next ? `/sign-in?next=${encodeURIComponent(next)}` : "/sign-in";
+
   return (
     <Card>
       <CardHeader>
@@ -28,7 +31,7 @@ export default async function SignUpPage({
       </CardContent>
       <CardFooter className="justify-center text-sm text-muted-foreground">
         Already have an account?&nbsp;
-        <Link href="/sign-in" className="text-foreground underline-offset-4 hover:underline">
+        <Link href={signInHref} className="text-foreground underline-offset-4 hover:underline">
           Sign in
         </Link>
       </CardFooter>

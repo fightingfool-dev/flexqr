@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { getUser, getUserWorkspaces } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { generateShortCode } from "@/lib/qr";
@@ -22,10 +21,11 @@ export default async function CreateConfirmPage({
     redirect("/");
   }
 
-  const encodedUrl = encodeURIComponent(destinationUrl);
-  const selfParams = new URLSearchParams({ url: encodedUrl });
+  const selfParams = new URLSearchParams({ url: destinationUrl });
   if (usecase) selfParams.set("usecase", usecase);
   const selfPath = `/create/confirm?${selfParams.toString()}`;
+  // Manual encode only for the error-fallback redirect below (not URLSearchParams)
+  const encodedUrl = encodeURIComponent(destinationUrl);
 
   // Auth — bounce to sign-up so the next param is preserved
   const user = await getUser();
@@ -88,7 +88,5 @@ export default async function CreateConfirmPage({
 
   if (error || !created) redirect(`/create?url=${encodedUrl}`);
 
-  revalidatePath("/dashboard/qr-codes");
-  revalidatePath("/dashboard");
   redirect(`/dashboard/qr-codes/${created.id}?new=1`);
 }

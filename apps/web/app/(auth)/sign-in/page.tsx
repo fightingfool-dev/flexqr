@@ -12,11 +12,14 @@ import {
 
 export const metadata: Metadata = { title: "Sign in" };
 
-export default function SignInPage({
+export default async function SignInPage({
   searchParams,
 }: {
   searchParams: Promise<{ next?: string; error?: string }>;
 }) {
+  const { next } = await searchParams;
+  const signUpHref = next ? `/sign-up?next=${encodeURIComponent(next)}` : "/sign-up";
+
   return (
     <Card>
       <CardHeader>
@@ -28,7 +31,7 @@ export default function SignInPage({
       </CardContent>
       <CardFooter className="justify-center text-sm text-muted-foreground">
         No account?&nbsp;
-        <Link href="/sign-up" className="text-foreground underline-offset-4 hover:underline">
+        <Link href={signUpHref} className="text-foreground underline-offset-4 hover:underline">
           Sign up
         </Link>
       </CardFooter>

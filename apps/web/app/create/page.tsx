@@ -49,8 +49,8 @@ export default async function CreatePage({
     generateQRSvg(previewUrl),
   ]);
 
-  // Build confirm URL — thread usecase through so confirm can name the QR
-  const confirmParams = new URLSearchParams({ url: encodeURIComponent(destinationUrl) });
+  // Build confirm URL — URLSearchParams handles encoding; don't pre-encode
+  const confirmParams = new URLSearchParams({ url: destinationUrl });
   if (usecase) confirmParams.set("usecase", usecase);
   const confirmPath = `/create/confirm?${confirmParams.toString()}`;
   const ctaHref = user
