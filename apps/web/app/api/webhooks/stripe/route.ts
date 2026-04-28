@@ -135,9 +135,10 @@ export async function POST(request: NextRequest) {
       // was missed (e.g. webhook not subscribed to that event).
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
-        const subId = typeof invoice.subscription === "string"
-          ? invoice.subscription
-          : invoice.subscription?.id;
+        // SDK v18+: subscription id is nested under parent.subscription_details.
+        // The field type is string | Stripe.Subscription, so narrow to the id string.
+        const subRef = invoice.parent?.subscription_details?.subscription;
+        const subId = typeof subRef === "string" ? subRef : subRef?.id ?? null;
         if (subId) {
           const subscription = await stripe.subscriptions.retrieve(subId);
           await handleSubscriptionUpsert(subscription);
