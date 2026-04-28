@@ -170,7 +170,7 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
     <section className="px-4 sm:px-6 py-12 sm:py-20 lg:py-28 mx-auto max-w-6xl">
       <div className="grid gap-12 lg:gap-16 lg:grid-cols-[1fr,320px] lg:items-center">
         {/* Left column: copy + input */}
-        <div className="space-y-8">
+        <div className="space-y-8 min-w-0">
           {/* Headline */}
           <div className="space-y-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-foreground">
@@ -182,16 +182,13 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
           </div>
 
           {/* Mobile use-case quick links */}
-          <div
-            className="md:hidden flex gap-2 overflow-x-auto pb-1"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" } as React.CSSProperties}
-          >
+          <div className="md:hidden flex flex-wrap gap-2">
             {MOBILE_USE_CASES.map(({ label, href }) => (
               <a
                 key={href}
                 href={href}
                 className={cn(
-                  "inline-flex items-center whitespace-nowrap shrink-0 rounded-full border px-3.5 py-1.5",
+                  "inline-flex items-center rounded-full border px-3 py-1.5",
                   "text-sm font-semibold text-foreground",
                   "bg-background hover:bg-primary hover:text-primary-foreground hover:border-primary",
                   "transition-colors duration-150"
