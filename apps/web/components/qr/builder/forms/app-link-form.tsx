@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormActions } from "./website-form";
+import { normalizeUrl } from "@/lib/url";
 
 interface Props {
   onNext: (contentJson: Record<string, unknown>, destinationUrl: string) => void;
@@ -27,16 +28,17 @@ export function AppLinkForm({ onNext, onBack }: Props) {
       setError("A fallback web URL is required.");
       return;
     }
+    const normalizedWeb = normalizeUrl(webUrl);
     try {
-      new URL(webUrl);
+      new URL(normalizedWeb);
     } catch {
       setError("Fallback web URL must be a valid URL.");
       return;
     }
-    const contentJson: Record<string, unknown> = { webUrl };
+    const contentJson: Record<string, unknown> = { webUrl: normalizedWeb };
     if (iosUrl) contentJson.iosUrl = iosUrl;
     if (androidUrl) contentJson.androidUrl = androidUrl;
-    onNext(contentJson, webUrl);
+    onNext(contentJson, normalizedWeb);
   }
 
   return (
@@ -75,8 +77,8 @@ export function AppLinkForm({ onNext, onBack }: Props) {
         <Label htmlFor="webUrl">Fallback web URL</Label>
         <Input
           id="webUrl"
-          type="url"
-          placeholder="https://myapp.com"
+          type="text"
+          placeholder="myapp.com or https://myapp.com"
           value={webUrl}
           onChange={(e) => setWebUrl(e.target.value)}
           required

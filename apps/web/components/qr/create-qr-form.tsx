@@ -59,8 +59,8 @@ export function CreateQRForm({
         <Input
           id="destinationUrl"
           name="destinationUrl"
-          type="url"
-          placeholder="https://example.com/landing"
+          type="text"
+          placeholder="example.com or https://example.com/landing"
           defaultValue={defaultDestinationUrl}
           disabled={pending}
           required

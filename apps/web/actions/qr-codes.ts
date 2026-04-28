@@ -10,6 +10,7 @@ import { invalidateCachedEntry } from "@/lib/redis";
 import { PLAN_LIMITS } from "@/lib/plans";
 import { insertEvent } from "@/lib/tracking";
 import { logError, isNextInternalError } from "@/lib/logger";
+import { normalizeUrl } from "@/lib/url";
 
 type State = { error?: string };
 
@@ -24,7 +25,7 @@ export async function createQRCode(
     if (!workspace) return { error: "No workspace found." };
 
     const name = (formData.get("name") as string).trim();
-    const destinationUrl = (formData.get("destinationUrl") as string).trim();
+    const destinationUrl = normalizeUrl((formData.get("destinationUrl") as string).trim());
 
     if (!name) return { error: "Name is required." };
     if (!destinationUrl) return { error: "Destination URL is required." };
@@ -32,7 +33,7 @@ export async function createQRCode(
     try {
       new URL(destinationUrl);
     } catch {
-      return { error: "Destination URL must be a valid URL (include https://)." };
+      return { error: "Destination URL must be a valid URL (e.g. example.com or https://example.com)." };
     }
 
     const { count } = await supabaseAdmin
@@ -114,7 +115,7 @@ export async function updateQRCode(
     await requireUser();
 
     const name = (formData.get("name") as string).trim();
-    const destinationUrl = (formData.get("destinationUrl") as string).trim();
+    const destinationUrl = normalizeUrl((formData.get("destinationUrl") as string).trim());
 
     if (!name) return { error: "Name is required." };
     if (!destinationUrl) return { error: "Destination URL is required." };
@@ -122,7 +123,7 @@ export async function updateQRCode(
     try {
       new URL(destinationUrl);
     } catch {
-      return { error: "Destination URL must be a valid URL (include https://)." };
+      return { error: "Destination URL must be a valid URL (e.g. example.com or https://example.com)." };
     }
 
     const { data: existing } = await supabaseAdmin

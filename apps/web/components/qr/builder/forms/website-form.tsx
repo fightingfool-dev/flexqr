@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { normalizeUrl } from "@/lib/url";
 
 interface Props {
   onNext: (contentJson: Record<string, unknown>, destinationUrl: string) => void;
@@ -18,13 +19,14 @@ export function WebsiteForm({ onNext, onBack }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    const normalized = normalizeUrl(url);
     try {
-      new URL(url);
+      new URL(normalized);
     } catch {
-      setError("Enter a valid URL (e.g. https://example.com)");
+      setError("Enter a valid URL (e.g. example.com or https://example.com)");
       return;
     }
-    onNext({ url }, url);
+    onNext({ url: normalized }, normalized);
   }
 
   return (
@@ -33,8 +35,8 @@ export function WebsiteForm({ onNext, onBack }: Props) {
         <Label htmlFor="url">Website URL</Label>
         <Input
           id="url"
-          type="url"
-          placeholder="https://example.com"
+          type="text"
+          placeholder="example.com or https://example.com"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           autoFocus

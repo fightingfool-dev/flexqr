@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormActions } from "./website-form";
+import { normalizeUrl } from "@/lib/url";
 
 interface Props {
   onNext: (contentJson: Record<string, unknown>, destinationUrl: string) => void;
@@ -17,13 +18,14 @@ export function VideoForm({ onNext, onBack }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    const normalized = normalizeUrl(videoUrl);
     try {
-      new URL(videoUrl);
+      new URL(normalized);
     } catch {
       setError("Enter a valid video URL.");
       return;
     }
-    onNext({ videoUrl }, videoUrl);
+    onNext({ videoUrl: normalized }, normalized);
   }
 
   return (
@@ -32,7 +34,7 @@ export function VideoForm({ onNext, onBack }: Props) {
         <Label htmlFor="videoUrl">Video URL</Label>
         <Input
           id="videoUrl"
-          type="url"
+          type="text"
           placeholder="https://youtube.com/watch?v=..."
           value={videoUrl}
           onChange={(e) => setVideoUrl(e.target.value)}

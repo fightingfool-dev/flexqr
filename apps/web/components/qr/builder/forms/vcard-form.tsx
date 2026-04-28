@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormActions } from "./website-form";
+import { normalizeUrl } from "@/lib/url";
 
 interface Props {
   onNext: (contentJson: Record<string, unknown>, destinationUrl: string) => void;
@@ -43,7 +44,7 @@ export function VCardForm({ onNext, onBack }: Props) {
     if (fields.phone) contentJson.phone = fields.phone.trim();
     if (fields.company) contentJson.company = fields.company.trim();
     if (fields.title) contentJson.title = fields.title.trim();
-    if (fields.website) contentJson.website = fields.website.trim();
+    if (fields.website) contentJson.website = normalizeUrl(fields.website.trim());
     if (fields.address) contentJson.address = fields.address.trim();
 
     // destinationUrl is a placeholder — server action computes the real /api/vcard/{shortCode}
@@ -132,8 +133,8 @@ export function VCardForm({ onNext, onBack }: Props) {
         </Label>
         <Input
           id="website"
-          type="url"
-          placeholder="https://janedoe.com"
+          type="text"
+          placeholder="janedoe.com or https://janedoe.com"
           value={fields.website}
           onChange={set("website")}
         />

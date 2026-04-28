@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { normalizeUrl } from "@/lib/url";
 
 const MOBILE_USE_CASES = [
   { label: "Restaurant Menu", href: "/create?type=website&usecase=restaurant-menu" },
@@ -162,7 +163,7 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
     const trimmed = url.trim();
     if (!trimmed) return;
     startTransition(() => {
-      router.push(`/create?url=${encodeURIComponent(trimmed)}`);
+      router.push(`/create?url=${encodeURIComponent(normalizeUrl(trimmed))}`);
     });
   }
 
@@ -203,8 +204,8 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="flex gap-2">
               <Input
-                type="url"
-                placeholder="https://your-link.com"
+                type="text"
+                placeholder="your-website.com or https://your-link.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 className="h-11 text-base flex-1 min-w-0"

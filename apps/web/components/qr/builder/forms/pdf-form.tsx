@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormActions } from "./website-form";
+import { normalizeUrl } from "@/lib/url";
 
 interface Props {
   onNext: (contentJson: Record<string, unknown>, destinationUrl: string) => void;
@@ -17,13 +18,14 @@ export function PdfForm({ onNext, onBack }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    const normalized = normalizeUrl(fileUrl);
     try {
-      new URL(fileUrl);
+      new URL(normalized);
     } catch {
       setError("Enter a valid publicly accessible PDF URL.");
       return;
     }
-    onNext({ fileUrl }, fileUrl);
+    onNext({ fileUrl: normalized }, normalized);
   }
 
   return (
@@ -32,7 +34,7 @@ export function PdfForm({ onNext, onBack }: Props) {
         <Label htmlFor="fileUrl">PDF URL</Label>
         <Input
           id="fileUrl"
-          type="url"
+          type="text"
           placeholder="https://example.com/document.pdf"
           value={fileUrl}
           onChange={(e) => setFileUrl(e.target.value)}

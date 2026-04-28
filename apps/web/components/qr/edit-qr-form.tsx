@@ -59,7 +59,7 @@ export function EditQRForm({ qrCode }: { qrCode: DbQRCode }) {
         <Input
           id="destinationUrl"
           name="destinationUrl"
-          type="url"
+          type="text"
           defaultValue={qrCode.destinationUrl}
           disabled={pending}
           required

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { LandingNav } from "@/components/landing/landing-nav";
 import { UseCaseContextForm } from "@/components/create/use-case-context-form";
 import { getUseCaseConfig } from "@/lib/use-cases";
+import { normalizeUrl } from "@/lib/url";
 
 export const metadata: Metadata = { title: "Preview your QR code" };
 
@@ -36,7 +37,7 @@ export default async function CreatePage({
 
   let destinationUrl: string;
   try {
-    destinationUrl = new URL(rawUrl).toString();
+    destinationUrl = new URL(normalizeUrl(rawUrl)).toString();
   } catch {
     redirect("/");
   }

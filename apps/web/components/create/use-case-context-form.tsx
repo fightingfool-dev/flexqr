@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getUseCaseConfig } from "@/lib/use-cases";
+import { normalizeUrl } from "@/lib/url";
 
 // Fallbacks for when only `type` is provided (no usecase slug)
 const TYPE_HEADINGS: Record<string, string> = {
@@ -49,12 +50,13 @@ export function UseCaseContextForm({ type, usecase }: Props) {
     e.preventDefault();
     const trimmed = url.trim();
     if (!trimmed) return;
+    const normalized = normalizeUrl(trimmed);
     try {
-      new URL(trimmed);
+      new URL(normalized);
     } catch {
       return;
     }
-    const params = new URLSearchParams({ url: trimmed, type });
+    const params = new URLSearchParams({ url: normalized, type });
     if (usecase) params.set("usecase", usecase);
     router.push(`/create?${params.toString()}`);
   }
@@ -73,7 +75,7 @@ export function UseCaseContextForm({ type, usecase }: Props) {
       <div className="rounded-2xl border bg-card shadow-sm p-6 space-y-4">
         <form onSubmit={handleSubmit} className="space-y-3">
           <Input
-            type="url"
+            type="text"
             placeholder={placeholder}
             value={url}
             onChange={(e) => setUrl(e.target.value)}

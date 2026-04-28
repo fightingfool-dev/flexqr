@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormActions } from "./website-form";
+import { normalizeUrl } from "@/lib/url";
 
 const PLATFORMS = [
   { value: "", label: "Custom URL" },
@@ -27,13 +28,14 @@ export function FeedbackForm({ onNext, onBack }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    const normalized = normalizeUrl(url);
     try {
-      new URL(url);
+      new URL(normalized);
     } catch {
       setError("Enter a valid URL for your feedback or review page.");
       return;
     }
-    onNext({ url, platform: platform || undefined }, url);
+    onNext({ url: normalized, platform: platform || undefined }, normalized);
   }
 
   return (
@@ -59,7 +61,7 @@ export function FeedbackForm({ onNext, onBack }: Props) {
         <Label htmlFor="feedbackUrl">Feedback / review URL</Label>
         <Input
           id="feedbackUrl"
-          type="url"
+          type="text"
           placeholder="https://g.page/r/..."
           value={url}
           onChange={(e) => setUrl(e.target.value)}

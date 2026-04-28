@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { track } from "@/lib/track";
+import { normalizeUrl } from "@/lib/url";
 
 export function TryItInput() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export function TryItInput() {
     const trimmed = url.trim();
     if (!trimmed) return;
     track("cta_click", { label: "Generate QR Code", location: "hero_try_it" });
-    router.push(`/create?url=${encodeURIComponent(trimmed)}`);
+    router.push(`/create?url=${encodeURIComponent(normalizeUrl(trimmed))}`);
   }
 
   return (
@@ -24,8 +25,8 @@ export function TryItInput() {
       className="flex w-full max-w-md mx-auto gap-2"
     >
       <Input
-        type="url"
-        placeholder="Paste your link"
+        type="text"
+        placeholder="your-website.com or paste your link"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         className="flex-1"

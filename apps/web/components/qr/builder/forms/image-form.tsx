@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormActions } from "./website-form";
+import { normalizeUrl } from "@/lib/url";
 
 interface Props {
   onNext: (contentJson: Record<string, unknown>, destinationUrl: string) => void;
@@ -17,13 +18,14 @@ export function ImageForm({ onNext, onBack }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    const normalized = normalizeUrl(imageUrl);
     try {
-      new URL(imageUrl);
+      new URL(normalized);
     } catch {
       setError("Enter a valid publicly accessible image URL.");
       return;
     }
-    onNext({ imageUrl }, imageUrl);
+    onNext({ imageUrl: normalized }, normalized);
   }
 
   return (
@@ -32,7 +34,7 @@ export function ImageForm({ onNext, onBack }: Props) {
         <Label htmlFor="imageUrl">Image URL</Label>
         <Input
           id="imageUrl"
-          type="url"
+          type="text"
           placeholder="https://example.com/photo.jpg"
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
