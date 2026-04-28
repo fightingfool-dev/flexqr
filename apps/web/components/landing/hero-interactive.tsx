@@ -182,23 +182,24 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
           </div>
 
           {/* Mobile use-case quick links */}
-          <div className="md:hidden -mx-4 px-4 overflow-x-auto scrollbar-none">
-            <div className="flex gap-2 w-max pb-1">
-              {MOBILE_USE_CASES.map(({ label, href }) => (
-                <a
-                  key={href}
-                  href={href}
-                  className={cn(
-                    "inline-flex items-center whitespace-nowrap rounded-full border px-3.5 py-1.5",
-                    "text-sm font-semibold text-foreground",
-                    "bg-background hover:bg-primary hover:text-primary-foreground hover:border-primary",
-                    "transition-colors duration-150 shrink-0"
-                  )}
-                >
-                  {label}
-                </a>
-              ))}
-            </div>
+          <div
+            className="md:hidden flex gap-2 overflow-x-auto pb-1"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" } as React.CSSProperties}
+          >
+            {MOBILE_USE_CASES.map(({ label, href }) => (
+              <a
+                key={href}
+                href={href}
+                className={cn(
+                  "inline-flex items-center whitespace-nowrap shrink-0 rounded-full border px-3.5 py-1.5",
+                  "text-sm font-semibold text-foreground",
+                  "bg-background hover:bg-primary hover:text-primary-foreground hover:border-primary",
+                  "transition-colors duration-150"
+                )}
+              >
+                {label}
+              </a>
+            ))}
           </div>
 
           {/* URL input */}
