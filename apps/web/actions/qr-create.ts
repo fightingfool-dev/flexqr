@@ -9,10 +9,11 @@ import { generateShortCode } from "@/lib/qr";
 import { PLAN_LIMITS } from "@/lib/plans";
 import { insertEvent } from "@/lib/tracking";
 import { logError, isNextInternalError } from "@/lib/logger";
+import { env } from "@/lib/env";
 import { computeDestinationUrl, type QRBuilderType } from "@/lib/qr-builder-types";
 import type { QRDesignSettings } from "@/lib/qr-design-types";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+const APP_URL = env.APP_URL;
 
 export async function createQRCodeWithType(
   name: string,

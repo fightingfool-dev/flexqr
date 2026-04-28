@@ -1,5 +1,6 @@
 import QRCode from "qrcode";
 import { supabaseAdmin } from "./supabase/admin";
+import { env } from "./env";
 
 // Short code alphabet: lowercase alphanumeric, no ambiguous chars (0/O, 1/l/I).
 const ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
@@ -27,8 +28,7 @@ export async function generateShortCode(): Promise<string> {
 
 // Returns the full redirect URL for a given short code.
 export function shortCodeUrl(shortCode: string): string {
-  const raw = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  const base = new URL(raw).origin;
+  const base = new URL(env.APP_URL).origin;
   return `${base}/r/${shortCode}`;
 }
 

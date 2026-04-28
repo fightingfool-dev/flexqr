@@ -9,9 +9,22 @@ function get(key: string, fallback?: string): string {
   return value ?? "";
 }
 
+// Ensures APP_URL uses HTTPS in production. If it doesn't, the build
+// will throw at startup — easier to catch than silent http:// QR links.
+function requireHttps(value: string): string {
+  if (process.env.NODE_ENV === "production" && !value.startsWith("https://")) {
+    throw new Error(
+      `NEXT_PUBLIC_APP_URL must start with https:// in production. ` +
+        `Got: "${value}". ` +
+        `Fix: Vercel Dashboard → Project → Settings → Environment Variables.`
+    );
+  }
+  return value;
+}
+
 export const env = {
   // App
-  APP_URL: get("NEXT_PUBLIC_APP_URL", "http://localhost:3000"),
+  APP_URL: requireHttps(get("NEXT_PUBLIC_APP_URL", "http://localhost:3000")),
 
   // Supabase (public — safe to expose to browser)
   SUPABASE_URL: get("NEXT_PUBLIC_SUPABASE_URL"),
