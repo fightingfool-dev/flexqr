@@ -130,6 +130,29 @@ export async function POST(request: NextRequest) {
         );
         break;
       }
+      // Belt-and-suspenders: fires on every successful payment including the
+      // first charge. Guarantees the plan is set even if checkout.session.completed
+      // was missed (e.g. webhook not subscribed to that event).
+      case "invoice.paid": {
+        const invoice = event.data.object as Stripe.Invoice;
+        const subId = typeof invoice.subscription === "string"
+          ? invoice.subscription
+          : invoice.subscription?.id;
+        if (subId) {
+          const subscription = await stripe.subscriptions.retrieve(subId);
+          await handleSubscriptionUpsert(subscription);
+        }
+        break;
+      }
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice;
+        const customerId = invoice.customer as string;
+        await supabaseAdmin
+          .from("subscriptions")
+          .update({ status: "PAST_DUE" })
+          .eq("stripeCustomerId", customerId);
+        break;
+      }
     }
   } catch (err) {
     console.error(`Webhook handler error for ${event.type}:`, err);
