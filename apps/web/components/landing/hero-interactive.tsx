@@ -8,6 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+const MOBILE_USE_CASES = [
+  { label: "Restaurant Menu", href: "/create?type=website&usecase=restaurant-menu" },
+  { label: "Flyer Tracking", href: "/create?type=website&usecase=flyer-tracking" },
+  { label: "Business Card", href: "/create?type=vcard&usecase=business-card" },
+  { label: "Events", href: "/create?type=website&usecase=events" },
+  { label: "Packaging", href: "/create?type=website&usecase=packaging" },
+  { label: "Real Estate", href: "/create?type=website&usecase=real-estate" },
+];
+
 const APP_ORIGIN = (
   process.env.NEXT_PUBLIC_APP_URL ?? "https://analogqr.com"
 ).replace(/\/$/, "");
@@ -170,6 +179,26 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
             <p className="text-lg sm:text-xl font-bold leading-snug text-primary">
               Track every scan across devices, locations, and performance in one dashboard
             </p>
+          </div>
+
+          {/* Mobile use-case quick links */}
+          <div className="md:hidden -mx-4 px-4 overflow-x-auto scrollbar-none">
+            <div className="flex gap-2 w-max pb-1">
+              {MOBILE_USE_CASES.map(({ label, href }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "inline-flex items-center whitespace-nowrap rounded-full border px-3.5 py-1.5",
+                    "text-sm font-semibold text-foreground",
+                    "bg-background hover:bg-primary hover:text-primary-foreground hover:border-primary",
+                    "transition-colors duration-150 shrink-0"
+                  )}
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* URL input */}
