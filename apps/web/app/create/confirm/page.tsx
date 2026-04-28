@@ -4,14 +4,15 @@ import { getUser, getUserWorkspaces } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { generateShortCode } from "@/lib/qr";
 import { PLAN_LIMITS } from "@/lib/plans";
+import { getUseCaseConfig } from "@/lib/use-cases";
 import type { Plan } from "@/lib/database.types";
 
 export default async function CreateConfirmPage({
   searchParams,
 }: {
-  searchParams: Promise<{ url?: string }>;
+  searchParams: Promise<{ url?: string; usecase?: string }>;
 }) {
-  const { url: rawUrl } = await searchParams;
+  const { url: rawUrl, usecase } = await searchParams;
   if (!rawUrl) redirect("/");
 
   let destinationUrl: string;
@@ -22,15 +23,17 @@ export default async function CreateConfirmPage({
   }
 
   const encodedUrl = encodeURIComponent(destinationUrl);
-  const selfPath = `/create/confirm?url=${encodedUrl}`;
+  const selfParams = new URLSearchParams({ url: encodedUrl });
+  if (usecase) selfParams.set("usecase", usecase);
+  const selfPath = `/create/confirm?${selfParams.toString()}`;
 
-  // Auth — bounce to sign-up (not sign-in) so the next param is preserved
+  // Auth — bounce to sign-up so the next param is preserved
   const user = await getUser();
   if (!user) {
     redirect(`/sign-up?next=${encodeURIComponent(selfPath)}`);
   }
 
-  // Workspace — new users must onboard first; thread selfPath through
+  // Workspace — new users must onboard first
   const workspaces = await getUserWorkspaces(user.id);
   if (workspaces.length === 0) {
     redirect(`/onboarding?next=${encodeURIComponent(selfPath)}`);
@@ -49,15 +52,24 @@ export default async function CreateConfirmPage({
     redirect("/dashboard/settings");
   }
 
-  // Derive a readable name from the hostname
+  // Name: use suggested name from use-case config, fall back to hostname
+  const useCaseConfig = usecase ? getUseCaseConfig(usecase) : null;
   let name: string;
-  try {
-    name = new URL(destinationUrl).hostname.replace(/^www\./, "");
-  } catch {
-    name = "My QR Code";
+  if (useCaseConfig) {
+    name = useCaseConfig.suggestedName;
+  } else {
+    try {
+      name = new URL(destinationUrl).hostname.replace(/^www\./, "");
+    } catch {
+      name = "My QR Code";
+    }
   }
 
   const shortCode = await generateShortCode();
+
+  // contentJson: store url + usecase for future reference; does not affect redirect
+  const contentJson: Record<string, string> = { url: destinationUrl };
+  if (usecase) contentJson.usecase = usecase;
 
   const { data: created, error } = await supabaseAdmin
     .from("qr_codes")
@@ -68,6 +80,7 @@ export default async function CreateConfirmPage({
       destinationUrl,
       type: "URL",
       tags: [],
+      contentJson,
       updatedAt: new Date().toISOString(),
     })
     .select("id")

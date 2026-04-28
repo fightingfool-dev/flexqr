@@ -164,10 +164,10 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
         <div className="space-y-8">
           {/* Headline */}
           <div className="space-y-4">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.15]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-foreground">
               Create dynamic QR codes and update anytime
             </h1>
-            <p className="text-base sm:text-lg font-semibold leading-snug text-primary">
+            <p className="text-lg sm:text-xl font-bold leading-snug text-primary">
               Track every scan across devices, locations, and performance in one dashboard
             </p>
           </div>

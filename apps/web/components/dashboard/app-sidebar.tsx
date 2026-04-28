@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Logo } from "@/components/logo";
 import {
   LayoutDashboard,
   QrCode,
@@ -46,10 +47,7 @@ export function AppSidebar({ workspaceName, userEmail }: Props) {
     <Sidebar>
       {/* Brand + workspace */}
       <SidebarHeader className="px-4 py-3 space-y-2.5">
-        <Link href="/" className="font-bold text-lg tracking-tight leading-none">
-          <span className="text-foreground">Analog</span>
-          <span className="text-primary">QR</span>
-        </Link>
+        <Logo size="sm" />
         <div className="flex items-center gap-2">
           <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-[10px] font-bold text-primary shrink-0">
             {initials}

@@ -5,7 +5,7 @@ const STEPS = [
   {
     n: 1,
     label: "Paste your link",
-    detail: "Drop in any URL — website, menu, file, or social profile.",
+    detail: "Drop in any URL: website, menu, file, or social profile.",
   },
   {
     n: 2,
@@ -51,7 +51,7 @@ export function HowItWorksSection() {
 
         <div className="space-y-3">
           <Button asChild size="lg" className="text-base px-8">
-            <Link href="/sign-up">Create your first QR code — free</Link>
+            <Link href="/sign-up">Create your first QR code for free</Link>
           </Button>
           <p className="text-xs text-muted-foreground">
             No credit card required

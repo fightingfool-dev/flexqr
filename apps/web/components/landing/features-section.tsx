@@ -4,12 +4,12 @@ const FEATURES = [
   {
     icon: RefreshCw,
     title: "Update anytime",
-    body: "Change the destination URL of any QR code after it's printed — no reprinting needed.",
+    body: "Change the destination URL of any QR code after it's printed. No reprinting needed.",
   },
   {
     icon: BarChart2,
     title: "Real-time analytics",
-    body: "See scans, devices, cities, and trends the moment they happen — all in one dashboard.",
+    body: "See scans, devices, cities, and trends the moment they happen, all in one dashboard.",
   },
   {
     icon: Palette,
@@ -24,7 +24,7 @@ const FEATURES = [
   {
     icon: Globe,
     title: "Works everywhere",
-    body: "Menus, flyers, business cards, billboards — one code that works on any surface.",
+    body: "Menus, flyers, business cards, billboards. One code that works on any surface.",
   },
   {
     icon: QrCode,

@@ -6,16 +6,33 @@ import { generateQRSvg, previewShortCode, shortCodeUrl } from "@/lib/qr";
 import { getUser } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { LandingNav } from "@/components/landing/landing-nav";
+import { UseCaseContextForm } from "@/components/create/use-case-context-form";
+import { getUseCaseConfig } from "@/lib/use-cases";
 
 export const metadata: Metadata = { title: "Preview your QR code" };
 
 export default async function CreatePage({
   searchParams,
 }: {
-  searchParams: Promise<{ url?: string }>;
+  searchParams: Promise<{ url?: string; type?: string; usecase?: string }>;
 }) {
-  const { url: rawUrl } = await searchParams;
-  if (!rawUrl) redirect("/");
+  const { url: rawUrl, type, usecase } = await searchParams;
+
+  // No url — if type/usecase context is present, show the URL-input step
+  if (!rawUrl) {
+    if (type || usecase) {
+      const user = await getUser();
+      return (
+        <>
+          <LandingNav isLoggedIn={!!user} />
+          <main className="min-h-[calc(100vh-3.5rem)] bg-muted/30 flex items-center justify-center px-4 py-16">
+            <UseCaseContextForm type={type ?? "website"} usecase={usecase ?? ""} />
+          </main>
+        </>
+      );
+    }
+    redirect("/");
+  }
 
   let destinationUrl: string;
   try {
@@ -32,8 +49,10 @@ export default async function CreatePage({
     generateQRSvg(previewUrl),
   ]);
 
-  const encodedUrl = encodeURIComponent(destinationUrl);
-  const confirmPath = `/create/confirm?url=${encodedUrl}`;
+  // Build confirm URL — thread usecase through so confirm can name the QR
+  const confirmParams = new URLSearchParams({ url: encodeURIComponent(destinationUrl) });
+  if (usecase) confirmParams.set("usecase", usecase);
+  const confirmPath = `/create/confirm?${confirmParams.toString()}`;
   const ctaHref = user
     ? confirmPath
     : `/sign-up?next=${encodeURIComponent(confirmPath)}`;
@@ -42,6 +61,9 @@ export default async function CreatePage({
     destinationUrl.length > 55
       ? destinationUrl.slice(0, 55) + "…"
       : destinationUrl;
+
+  const useCaseConfig = usecase ? getUseCaseConfig(usecase) : null;
+  const contextLabel = useCaseConfig?.heading ?? null;
 
   return (
     <>
@@ -52,7 +74,7 @@ export default async function CreatePage({
           <div className="text-center space-y-2">
             <div className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-primary bg-primary/10 px-3 py-1 rounded-full">
               <QrCode className="h-3 w-3" />
-              Preview
+              {contextLabel ?? "Preview"}
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mt-2">
               Your QR code is ready
@@ -64,13 +86,11 @@ export default async function CreatePage({
 
           {/* Preview card */}
           <div className="rounded-2xl border bg-card shadow-sm p-8 flex flex-col items-center gap-6">
-            {/* QR code */}
             <div
               className="w-48 h-48 shrink-0 rounded-xl overflow-hidden border bg-white"
               dangerouslySetInnerHTML={{ __html: qrSvg }}
             />
 
-            {/* URL details */}
             <div className="w-full space-y-4 text-sm">
               <div className="space-y-1">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -94,7 +114,6 @@ export default async function CreatePage({
               </div>
             </div>
 
-            {/* CTA */}
             <div className="w-full space-y-2.5">
               <Button asChild className="w-full" size="lg">
                 <Link href={ctaHref}>Save &amp; Track This QR</Link>
@@ -108,7 +127,7 @@ export default async function CreatePage({
           <p className="text-center text-xs text-muted-foreground">
             Wrong link?{" "}
             <Link
-              href="/"
+              href={usecase ? `/create?type=${type ?? "website"}&usecase=${usecase}` : "/"}
               className="underline underline-offset-4 hover:text-foreground transition-colors duration-150"
             >
               Go back and try again

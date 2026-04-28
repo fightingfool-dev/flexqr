@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
 
 export function FinalCtaSection() {
   return (
@@ -38,7 +39,7 @@ export function FinalCtaSection() {
 
       <footer className="border-t px-4 sm:px-6 py-8">
         <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">AnalogQR</span>
+          <Logo size="sm" href={null} />
           <span>© {new Date().getFullYear()} AnalogQR. All rights reserved.</span>
           <div className="flex gap-4">
             <Link href="#" className="hover:text-foreground transition-colors">

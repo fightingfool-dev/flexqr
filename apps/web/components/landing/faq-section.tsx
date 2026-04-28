@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 const FAQS = [
   {
     q: "What is a dynamic QR code?",
-    a: "A dynamic QR code redirects through a short link you control. You can change the destination URL anytime — even after the code is printed — without generating a new QR code.",
+    a: "A dynamic QR code redirects through a short link you control. You can change the destination URL anytime, even after the code is printed, without generating a new QR code.",
   },
   {
     q: "Is there a free plan?",
@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: "Can I change the destination URL after printing?",
-    a: "Yes — that's the whole point. Edit the URL from your dashboard at any time. The printed QR code keeps working.",
+    a: "Yes, that's the whole point. Edit the URL from your dashboard at any time. The printed QR code keeps working.",
   },
   {
     q: "Can I cancel anytime?",
@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "Can I track scans?",
-    a: "Yes. Every plan includes scan tracking — you'll see total scans, devices, countries, and trends over time.",
+    a: "Yes. Every plan includes scan tracking. You will see total scans, devices, countries, and trends over time.",
   },
 ];
 
