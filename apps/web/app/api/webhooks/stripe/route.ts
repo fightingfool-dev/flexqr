@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { revalidatePath } from "next/cache";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { planFromPriceId } from "@/lib/plans";
@@ -58,6 +59,10 @@ async function handleSubscriptionUpsert(subscription: Stripe.Subscription) {
       .update({ plan, updatedAt: new Date().toISOString() })
       .eq("id", workspaceId),
   ]);
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/settings");
+  revalidatePath("/dashboard/qr-codes");
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
@@ -84,6 +89,10 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
       .update({ plan: "FREE", updatedAt: new Date().toISOString() })
       .eq("id", existing.workspaceId);
   }
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/settings");
+  revalidatePath("/dashboard/qr-codes");
 }
 
 export async function POST(request: NextRequest) {
