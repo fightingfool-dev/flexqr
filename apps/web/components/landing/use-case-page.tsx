@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { LandingNav } from "@/components/landing/landing-nav";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getUser } from "@/lib/auth";
 
 export type UseCaseStep = { title: string; body: string };
 export type RelatedPage = { label: string; href: string };
+export type UseCaseFaq = { q: string; a: string };
 
 export type UseCasePageProps = {
   headline: string;
@@ -16,7 +19,11 @@ export type UseCasePageProps = {
   benefits: string[];
   steps: UseCaseStep[];
   relatedPages: RelatedPage[];
+  faqs?: UseCaseFaq[];
+  canonicalPath: string;
 };
+
+const BASE = "https://www.analogqr.com";
 
 export async function UseCasePageLayout({
   headline,
@@ -27,11 +34,53 @@ export async function UseCasePageLayout({
   benefits,
   steps,
   relatedPages,
+  faqs = [],
+  canonicalPath,
 }: UseCasePageProps) {
   const user = await getUser();
 
+  const pageUrl = `${BASE}${canonicalPath}`;
+
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: BASE },
+            { "@type": "ListItem", position: 2, name: headline, item: pageUrl },
+          ],
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: headline,
+          description: description,
+          url: pageUrl,
+          step: steps.map((s, i) => ({
+            "@type": "HowToStep",
+            position: i + 1,
+            name: s.title,
+            text: s.body,
+          })),
+        }}
+      />
+      {faqs.length > 0 && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map(({ q, a }) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }}
+        />
+      )}
       <LandingNav isLoggedIn={!!user} />
       <main className="pb-16">
         {/* Hero */}
@@ -115,6 +164,28 @@ export async function UseCasePageLayout({
             <Link href={ctaHref}>{ctaLabel}</Link>
           </Button>
         </section>
+
+        {/* FAQ */}
+        {faqs.length > 0 && (
+          <section className="border-t bg-muted/30 px-4 sm:px-6 py-14">
+            <div className="mx-auto max-w-2xl space-y-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-center">
+                Frequently asked questions
+              </h2>
+              <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+                {faqs.map(({ q, a }, i) => (
+                  <div key={q}>
+                    {i > 0 && <Separator />}
+                    <div className="px-6 py-5">
+                      <p className="font-semibold text-sm mb-1.5">{q}</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{a}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Internal links for SEO */}
         {relatedPages.length > 0 && (
