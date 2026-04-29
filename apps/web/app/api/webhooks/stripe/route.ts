@@ -26,20 +26,27 @@ async function handleSubscriptionUpsert(subscription: Stripe.Subscription) {
   const priceId = subscription.items.data[0]?.price.id ?? null;
   const plan = planFromPriceId(priceId);
   const status = stripeStatusToSubStatus(subscription.status);
-  const workspaceId =
-    subscription.metadata.workspaceId ??
-    // Fallback: look up from existing subscription row
-    (
-      await supabaseAdmin
-        .from("subscriptions")
-        .select("workspaceId")
-        .eq("stripeCustomerId", customerId)
-        .maybeSingle()
-    ).data?.workspaceId;
 
-  if (!workspaceId) return;
+  console.log("[webhook:upsert] sub=%s customer=%s priceId=%s plan=%s status=%s meta=%j",
+    subscription.id, customerId, priceId, plan, status, subscription.metadata);
 
-  await Promise.all([
+  let workspaceId = subscription.metadata.workspaceId;
+  if (!workspaceId) {
+    const { data } = await supabaseAdmin
+      .from("subscriptions")
+      .select("workspaceId")
+      .eq("stripeCustomerId", customerId)
+      .maybeSingle();
+    workspaceId = data?.workspaceId;
+    console.log("[webhook:upsert] workspaceId from DB fallback: %s", workspaceId ?? "NOT FOUND");
+  }
+
+  if (!workspaceId) {
+    console.error("[webhook:upsert] ABORT — no workspaceId for customer %s", customerId);
+    return;
+  }
+
+  const [subResult, wsResult] = await Promise.all([
     supabaseAdmin.from("subscriptions").upsert(
       {
         workspaceId,
@@ -59,6 +66,11 @@ async function handleSubscriptionUpsert(subscription: Stripe.Subscription) {
       .update({ plan, updatedAt: new Date().toISOString() })
       .eq("id", workspaceId),
   ]);
+
+  if (subResult.error) console.error("[webhook:upsert] subscriptions upsert error:", subResult.error);
+  if (wsResult.error)  console.error("[webhook:upsert] workspaces update error:", wsResult.error);
+
+  console.log("[webhook:upsert] DONE workspace=%s plan=%s", workspaceId, plan);
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/settings");
@@ -110,9 +122,12 @@ export async function POST(request: NextRequest) {
       signature,
       env.STRIPE_WEBHOOK_SECRET
     );
-  } catch {
+  } catch (err) {
+    console.error("[webhook] signature verification FAILED:", err);
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
+
+  console.log("[webhook] received event: %s id=%s", event.type, event.id);
 
   try {
     switch (event.type) {
