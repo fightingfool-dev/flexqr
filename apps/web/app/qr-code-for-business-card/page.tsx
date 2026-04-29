@@ -53,29 +53,29 @@ export default function BusinessCardPage() {
       canonicalPath="/qr-code-for-business-card"
       headline="QR Code for Business Card"
       subheadline="Make every business card smarter. One scan connects people to your portfolio, LinkedIn, or booking page."
-      description="Your business card has limited space — your QR code doesn't. Point people to your full portfolio, contact form, or calendar in one tap. Change where it points anytime without ordering new cards."
-      ctaHref="/create?type=vcard&usecase=business-card"
-      ctaLabel="Create My Business Card QR"
+      description="Your business card has limited space — your digital card doesn't. AnalogQR gives you a hosted digital business card page with your name, title, company, phone, email, website, and address. Scanners see a beautiful mobile card and can save your contact in one tap. No website required."
+      ctaHref="/dashboard/qr-codes/new"
+      ctaLabel="Build My Digital Card"
       benefits={[
-        "Link to your portfolio, LinkedIn, or personal site in one scan",
-        "Update the destination anytime — no new cards to order",
-        "See how many people actually followed up after meeting you",
-        "Custom-colored QR that looks premium on a printed card",
-        "Works with any link: website, Calendly, email, or social profile",
-        "Stand out with a modern, interactive business card experience",
+        "Hosted digital card — name, title, company, phone, email, address",
+        "One-tap 'Save to Contacts' so people never lose your details",
+        "No website required — the card is built and hosted by AnalogQR",
+        "Update your info anytime without printing new cards",
+        "See how many people scan and save your contact",
+        "Custom-colored QR code that looks premium on any printed card",
       ]}
       steps={[
         {
-          title: "Paste your profile link",
-          body: "Enter the URL of your website, LinkedIn, portfolio, or booking page.",
+          title: "Fill in your details",
+          body: "Enter your name, title, company, phone, email, website, and address in the AnalogQR builder.",
         },
         {
-          title: "Customize your QR code",
-          body: "Pick colors that match your card design. Add your logo for a fully branded look.",
+          title: "Generate your QR code",
+          body: "AnalogQR creates a hosted digital card page and a branded QR code in seconds.",
         },
         {
           title: "Print and track connections",
-          body: "Add the QR to your business card. See how many people scan and follow up after every meeting.",
+          body: "Add the QR to your business card. Contacts scan and save you in one tap.",
         },
       ]}
       faqs={FAQS}

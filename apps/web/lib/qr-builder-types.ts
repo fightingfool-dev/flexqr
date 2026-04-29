@@ -67,6 +67,7 @@ export interface MenuItemEntry {
   name: string;
   price?: string;
   description?: string;
+  imageUrl?: string;
 }
 
 export interface MenuSectionEntry {
@@ -79,6 +80,7 @@ export interface MenuContent {
   tagline?: string;
   phone?: string;
   address?: string;
+  coverImageUrl?: string;
   sections: MenuSectionEntry[];
 }
 

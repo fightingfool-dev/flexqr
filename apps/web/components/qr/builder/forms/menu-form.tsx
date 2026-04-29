@@ -1,26 +1,187 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { useState, useRef } from "react";
+import { Plus, Trash2, ImagePlus, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { FormActions } from "./website-form";
+import Image from "next/image";
 
-type ItemRow = { id: string; name: string; price: string; description: string };
+/* ── Types ── */
+type ItemRow = {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  imageUrl: string;
+};
 type SectionRow = { id: string; name: string; items: ItemRow[] };
 
 function uid() {
   return Math.random().toString(36).slice(2);
 }
 function newItem(): ItemRow {
-  return { id: uid(), name: "", price: "", description: "" };
+  return { id: uid(), name: "", price: "", description: "", imageUrl: "" };
 }
 function newSection(): SectionRow {
   return { id: uid(), name: "", items: [newItem()] };
 }
 
+/* ── Image upload helper ── */
+async function uploadImage(file: File): Promise<string> {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch("/api/upload", { method: "POST", body: form });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error ?? "Upload failed");
+  return json.url as string;
+}
+
+/* ── Cover image upload zone ── */
+function CoverImageUpload({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (url: string) => void;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function handleFile(file: File) {
+    setErr("");
+    setUploading(true);
+    try {
+      const url = await uploadImage(file);
+      onChange(url);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  if (value) {
+    return (
+      <div className="relative rounded-xl overflow-hidden border border-border h-32">
+        <Image src={value} alt="Cover" fill className="object-cover" unoptimized />
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          className="absolute top-2 right-2 h-6 w-6 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+          aria-label="Remove cover image"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => ref.current?.click()}
+        disabled={uploading}
+        className="flex flex-col items-center justify-center gap-2 w-full h-28 rounded-xl border-2 border-dashed border-border bg-muted/30 text-muted-foreground hover:border-primary/50 hover:bg-muted/50 transition-colors"
+      >
+        {uploading ? (
+          <Loader2 className="h-5 w-5 animate-spin" />
+        ) : (
+          <ImagePlus className="h-5 w-5" />
+        )}
+        <span className="text-xs font-medium">
+          {uploading ? "Uploading…" : "Add cover photo (optional)"}
+        </span>
+      </button>
+      {err && <p className="mt-1 text-xs text-destructive">{err}</p>}
+      <input
+        ref={ref}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) handleFile(f);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
+/* ── Per-item thumbnail upload ── */
+function ItemImageUpload({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (url: string) => void;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  async function handleFile(file: File) {
+    setUploading(true);
+    try {
+      const url = await uploadImage(file);
+      onChange(url);
+    } catch {
+      // silently ignore — photo is optional
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  if (value) {
+    return (
+      <div className="relative h-9 w-9 rounded-lg overflow-hidden border border-border shrink-0">
+        <Image src={value} alt="" fill className="object-cover" unoptimized />
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
+          aria-label="Remove image"
+        >
+          <X className="h-3 w-3 text-white" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => ref.current?.click()}
+      disabled={uploading}
+      className="h-9 w-9 rounded-lg border border-dashed border-border flex items-center justify-center text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors shrink-0"
+      aria-label="Add item image"
+      title="Add photo"
+    >
+      {uploading ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+      ) : (
+        <ImagePlus className="h-3.5 w-3.5" />
+      )}
+      <input
+        ref={ref}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) handleFile(f);
+          e.target.value = "";
+        }}
+      />
+    </button>
+  );
+}
+
+/* ── Main form ── */
 interface Props {
   onNext: (contentJson: Record<string, unknown>, destinationUrl: string) => void;
   onBack: () => void;
@@ -31,6 +192,7 @@ export function MenuForm({ onNext, onBack }: Props) {
   const [tagline, setTagline] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [coverImageUrl, setCoverImageUrl] = useState("");
   const [sections, setSections] = useState<SectionRow[]>([newSection()]);
   const [error, setError] = useState("");
 
@@ -64,7 +226,10 @@ export function MenuForm({ onNext, onBack }: Props) {
     setSections((ss) =>
       ss.map((s) =>
         s.id === sid
-          ? { ...s, items: s.items.map((i) => (i.id === iid ? { ...i, [field]: value } : i)) }
+          ? {
+              ...s,
+              items: s.items.map((i) => (i.id === iid ? { ...i, [field]: value } : i)),
+            }
           : s
       )
     );
@@ -86,6 +251,7 @@ export function MenuForm({ onNext, onBack }: Props) {
             name: i.name.trim(),
             ...(i.price.trim() && { price: i.price.trim() }),
             ...(i.description.trim() && { description: i.description.trim() }),
+            ...(i.imageUrl && { imageUrl: i.imageUrl }),
           })),
       }))
       .filter((s) => s.items.length > 0);
@@ -101,6 +267,7 @@ export function MenuForm({ onNext, onBack }: Props) {
     if (tagline.trim()) contentJson.tagline = tagline.trim();
     if (phone.trim()) contentJson.phone = phone.trim();
     if (address.trim()) contentJson.address = address.trim();
+    if (coverImageUrl) contentJson.coverImageUrl = coverImageUrl;
 
     onNext(contentJson, "menu://pending");
   }
@@ -112,6 +279,9 @@ export function MenuForm({ onNext, onBack }: Props) {
           {error}
         </p>
       )}
+
+      {/* Cover image */}
+      <CoverImageUpload value={coverImageUrl} onChange={setCoverImageUrl} />
 
       <div className="space-y-1.5">
         <Label htmlFor="restaurantName">Business name</Label>
@@ -179,7 +349,6 @@ export function MenuForm({ onNext, onBack }: Props) {
 
         {sections.map((section, si) => (
           <div key={section.id} className="rounded-xl border bg-muted/30 p-3 space-y-2.5">
-            {/* Section header row */}
             <div className="flex items-center gap-2">
               <Input
                 placeholder={`Section ${si + 1} (e.g. Starters, Mains, Drinks)`}
@@ -199,11 +368,15 @@ export function MenuForm({ onNext, onBack }: Props) {
               )}
             </div>
 
-            {/* Items */}
             <div className="space-y-2 pl-2 border-l-2 border-border ml-1">
               {section.items.map((item) => (
                 <div key={item.id} className="space-y-1">
                   <div className="flex items-center gap-2">
+                    {/* Item image thumbnail */}
+                    <ItemImageUpload
+                      value={item.imageUrl}
+                      onChange={(url) => updateItem(section.id, item.id, "imageUrl", url)}
+                    />
                     <Input
                       placeholder="Item name (e.g. Caesar Salad)"
                       value={item.name}

@@ -54,29 +54,29 @@ export default function RestaurantMenuPage() {
       canonicalPath="/qr-code-for-restaurant-menu"
       headline="QR Code for Restaurant Menu"
       subheadline="Update your menu daily — prices, specials, seasonal items — without reprinting a single QR code."
-      description="A printed menu is out of date the moment anything changes. A dynamic QR code from AnalogQR points to your live online menu and can be updated in seconds from your dashboard. Print once, update forever."
-      ctaHref="/create?type=website&usecase=restaurant-menu"
-      ctaLabel="Create My Menu QR Code"
+      description="A printed menu is out of date the moment anything changes. AnalogQR gives you a fully hosted digital menu — build it right in your dashboard with sections, items, prices, and photos. No website, no third-party app. Print the QR code and update the menu anytime."
+      ctaHref="/dashboard/qr-codes/new"
+      ctaLabel="Build My Hosted Menu"
       benefits={[
-        "Update your menu URL anytime — no reprint ever required",
+        "Build your menu directly in AnalogQR — no website or app needed",
+        "Add sections, items, prices, descriptions, and photos",
+        "Update dishes, prices, and specials in seconds — no reprint ever",
         "Track how many customers scan your menu each day",
-        "Works with any platform: Google Docs, PDF, or your own site",
         "Custom QR colors and your logo to match your brand",
-        "See scan trends by time of day to understand peak service hours",
-        "One QR code works on tables, windows, takeout bags, and flyers",
+        "Works on tables, windows, takeout bags, and flyers",
       ]}
       steps={[
         {
-          title: "Paste your menu link",
-          body: "Enter the URL of your online menu — a website, hosted PDF, or Google Doc.",
+          title: "Build your menu",
+          body: "Add sections (Starters, Mains, Drinks), items with prices, descriptions, and photos — all inside AnalogQR.",
         },
         {
           title: "Generate your QR code",
-          body: "AnalogQR creates a trackable, dynamic QR code in seconds. Customize colors to match your brand.",
+          body: "AnalogQR creates a hosted menu page and a trackable QR code in seconds. Customize colors to match your brand.",
         },
         {
-          title: "Print and track",
-          body: "Place the QR on tables and menus. Update the destination anytime from your dashboard — no reprint needed.",
+          title: "Print and update anytime",
+          body: "Place the QR on tables and menus. Update items, prices, or photos from your dashboard — no reprint needed.",
         },
       ]}
       faqs={FAQS}
