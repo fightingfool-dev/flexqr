@@ -10,7 +10,8 @@ export type QRBuilderType =
   | "APP_LINK"
   | "WHATSAPP"
   | "WIFI"
-  | "FEEDBACK";
+  | "FEEDBACK"
+  | "MENU";
 
 export interface WebsiteContent {
   url: string;
@@ -62,6 +63,25 @@ export interface FeedbackContent {
   platform?: string;
 }
 
+export interface MenuItemEntry {
+  name: string;
+  price?: string;
+  description?: string;
+}
+
+export interface MenuSectionEntry {
+  name: string;
+  items: MenuItemEntry[];
+}
+
+export interface MenuContent {
+  restaurantName: string;
+  tagline?: string;
+  phone?: string;
+  address?: string;
+  sections: MenuSectionEntry[];
+}
+
 export type QRContent =
   | WebsiteContent
   | PdfContent
@@ -71,7 +91,8 @@ export type QRContent =
   | AppLinkContent
   | WhatsAppContent
   | WifiContent
-  | FeedbackContent;
+  | FeedbackContent
+  | MenuContent;
 
 export function computeDestinationUrl(
   type: QRBuilderType,
@@ -107,8 +128,11 @@ export function computeDestinationUrl(
     case "APP_LINK":
       return (contentJson.webUrl as string) ?? "";
     case "VCARD":
-      if (shortCode) return `${appUrl}/api/vcard/${shortCode}`;
-      return `${appUrl}/api/vcard/preview`;
+      if (shortCode) return `${appUrl}/card/${shortCode}`;
+      return "";
+    case "MENU":
+      if (shortCode) return `${appUrl}/menu/${shortCode}`;
+      return "";
     default:
       return "";
   }

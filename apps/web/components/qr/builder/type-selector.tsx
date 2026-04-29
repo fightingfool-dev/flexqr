@@ -10,6 +10,7 @@ import {
   MessageCircle,
   Wifi,
   Star,
+  UtensilsCrossed,
 } from "lucide-react";
 import type { QRBuilderType } from "@/lib/qr-builder-types";
 
@@ -83,6 +84,13 @@ const TYPES: {
     description: "Collect reviews & ratings",
     Icon: Star,
     color: "#f59e0b",
+  },
+  {
+    type: "MENU",
+    label: "Menu",
+    description: "Hosted restaurant menu",
+    Icon: UtensilsCrossed,
+    color: "#d97706",
   },
 ];
 

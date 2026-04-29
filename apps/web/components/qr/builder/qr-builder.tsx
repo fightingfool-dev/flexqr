@@ -16,6 +16,7 @@ import { AppLinkForm } from "./forms/app-link-form";
 import { WhatsAppForm } from "./forms/whatsapp-form";
 import { WifiForm } from "./forms/wifi-form";
 import { FeedbackForm } from "./forms/feedback-form";
+import { MenuForm } from "./forms/menu-form";
 import { QRStudio } from "@/components/qr/qr-studio";
 import { createQRCodeWithType } from "@/actions/qr-create";
 import { type QRBuilderType, computeBuilderPreviewUrl } from "@/lib/qr-builder-types";
@@ -227,6 +228,8 @@ function ContentFormForType({
       return <WifiForm onNext={onNext} onBack={onBack} />;
     case "FEEDBACK":
       return <FeedbackForm onNext={onNext} onBack={onBack} />;
+    case "MENU":
+      return <MenuForm onNext={onNext} onBack={onBack} />;
     default:
       return null;
   }

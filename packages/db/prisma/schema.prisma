@@ -203,6 +203,7 @@ enum QRType {
   APP_LINK
   WHATSAPP
   FEEDBACK
+  MENU
 }
 
 enum SubStatus {
