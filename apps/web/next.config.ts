@@ -41,13 +41,17 @@ const nextConfig: NextConfig = {
     // Vercel already redirects HTTP→HTTPS at the edge, but this adds an
     // application-level guarantee using x-forwarded-proto which Vercel sets
     // on every request it proxies.
+    //
+    // /api/webhooks/* is explicitly excluded: Stripe POSTs must never be
+    // redirected — any 3xx causes Stripe to mark the delivery as failed and
+    // it will not retry correctly.
     const origin = isProd ? prodOrigin() : null;
     if (!origin) return [];
     return [
       {
-        source: "/:path*",
+        source: "/((?!api/webhooks/).*)",
         has: [{ type: "header", key: "x-forwarded-proto", value: "http" }],
-        destination: `${origin}/:path*`,
+        destination: `${origin}/$1`,
         permanent: true,
       },
     ];

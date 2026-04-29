@@ -46,8 +46,12 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Run on all paths except Next.js internals, static assets,
-    // the /r/ redirect handler (must stay fast), and webhook endpoints.
+    // Excluded from proxy:
+    //   _next/static, _next/image  — static asset serving
+    //   favicon.ico                — static asset
+    //   r/                         — QR redirect handler (must stay fast)
+    //   api/webhooks/              — Stripe webhooks must never be redirected;
+    //                                any 3xx causes Stripe to mark delivery failed
     "/((?!_next/static|_next/image|favicon.ico|r/|api/webhooks/).*)",
   ],
 };
