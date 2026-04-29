@@ -57,9 +57,12 @@ export async function createCheckoutSession(
   }
 }
 
-export async function createPortalSession(_formData: FormData): Promise<void> {
+export async function createPortalSession(
+  _prev: { error?: string },
+  _formData: FormData
+): Promise<{ error?: string }> {
   try {
-    if (!stripe) throw new Error("Stripe is not configured.");
+    if (!stripe) return { error: "Billing is not configured. Please contact support." };
 
     const user = await requireUser();
     const workspaces = await getUserWorkspaces(user.id);
@@ -71,19 +74,32 @@ export async function createPortalSession(_formData: FormData): Promise<void> {
       .eq("workspaceId", workspace.id)
       .maybeSingle();
 
-    if (!sub?.stripeCustomerId) redirect("/dashboard/settings?billing=no_portal");
+    if (!sub?.stripeCustomerId) {
+      return { error: "No billing record found. Please contact support@analogqr.com." };
+    }
 
     const appUrl = new URL(env.APP_URL).origin;
 
-    const session = await stripe.billingPortal.sessions.create({
-      customer: sub.stripeCustomerId as string,
-      return_url: `${appUrl}/dashboard/settings`,
-    });
+    let session;
+    try {
+      session = await stripe.billingPortal.sessions.create({
+        customer: sub.stripeCustomerId as string,
+        return_url: `${appUrl}/dashboard/settings`,
+      });
+    } catch (stripeErr: unknown) {
+      const msg = stripeErr instanceof Error ? stripeErr.message : String(stripeErr);
+      logError("action:createPortalSession:stripe", stripeErr);
+      // Most common cause: portal not configured in Stripe dashboard
+      if (msg.includes("No configuration")) {
+        return { error: "The billing portal is not configured yet. Please contact support@analogqr.com." };
+      }
+      return { error: `Stripe error: ${msg}` };
+    }
 
     redirect(session.url);
   } catch (err) {
     if (isNextInternalError(err)) throw err;
     logError("action:createPortalSession", err);
-    throw err;
+    return { error: "Something went wrong. Please try again or contact support." };
   }
 }

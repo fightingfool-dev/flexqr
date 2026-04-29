@@ -4,9 +4,10 @@ import { Check, Zap, Lock, Users, Key, Building2 } from "lucide-react";
 import { requireUser, getUserWorkspaces } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PLANS, formatPrice, ENTERPRISE_MAILTO } from "@/lib/plans";
-import { createCheckoutSession, createPortalSession } from "@/actions/billing";
+import { createCheckoutSession } from "@/actions/billing";
 import { Button } from "@/components/ui/button";
 import { BillingSuccessRefresh } from "@/components/billing/billing-success-refresh";
+import { ManageSubscriptionButton } from "@/components/billing/manage-subscription-button";
 import type { DbSubscription, Plan } from "@/lib/database.types";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -36,7 +37,6 @@ export default async function SettingsPage({
   const workspaces = await getUserWorkspaces(user.id);
   const workspace = workspaces[0]!;
   const { billing } = await searchParams;
-  const portalUnavailable = billing === "no_portal";
 
   const [{ count: qrCount }, { data: subData }] = await Promise.all([
     supabaseAdmin
@@ -74,15 +74,6 @@ export default async function SettingsPage({
           Manage your workspace and billing.
         </p>
       </div>
-
-      {/* Portal unavailable banner */}
-      {portalUnavailable && (
-        <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
-          Subscription management is temporarily unavailable. Please contact{" "}
-          <a href="mailto:support@analogqr.com" className="underline underline-offset-2">support@analogqr.com</a>{" "}
-          to make changes.
-        </div>
-      )}
 
       {/* Flash banner + race-condition poller */}
       {billing === "success" && (
@@ -125,13 +116,7 @@ export default async function SettingsPage({
               )}
             </div>
             <div className="flex items-center gap-2">
-              {isPaid && (
-                <form action={createPortalSession}>
-                  <Button type="submit" variant="outline" size="sm">
-                    Manage subscription
-                  </Button>
-                </form>
-              )}
+              {isPaid && <ManageSubscriptionButton />}
               {isEnterprise && (
                 <Button asChild variant="outline" size="sm">
                   <a href={ENTERPRISE_MAILTO}>Contact support</a>
