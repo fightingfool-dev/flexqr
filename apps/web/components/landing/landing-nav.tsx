@@ -5,6 +5,7 @@ import { Logo } from "@/components/logo";
 import {
   ChevronDown,
   Menu,
+  Mail,
   Utensils,
   FileText,
   CreditCard,
@@ -200,6 +201,14 @@ export function LandingNav({ isLoggedIn }: Props) {
             ))}
           </div>
 
+          {/* Contact link */}
+          <Link
+            href="/contact"
+            className="hidden md:block px-2.5 py-1.5 text-sm font-semibold text-foreground/80 rounded-md hover:bg-muted hover:text-foreground transition-colors whitespace-nowrap shrink-0"
+          >
+            Contact
+          </Link>
+
           {/* Spacer */}
           <div className="flex-1" />
 
@@ -303,6 +312,17 @@ export function LandingNav({ isLoggedIn }: Props) {
                     ))}
                   </div>
                 </div>
+
+                {/* Contact */}
+                <SheetClose asChild>
+                  <Link
+                    href="/contact"
+                    className="flex items-center gap-3 rounded-lg px-2 py-2.5 text-sm font-medium text-foreground hover:bg-muted active:bg-muted transition-colors"
+                  >
+                    <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                    Contact us
+                  </Link>
+                </SheetClose>
               </div>
 
               {/* Footer CTAs */}

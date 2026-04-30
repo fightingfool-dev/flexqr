@@ -49,6 +49,32 @@ export async function sendInviteEmail(to: string, workspaceName: string, inviter
   }
 }
 
+export async function sendContactEmail(
+  name: string,
+  fromEmail: string,
+  subject: string,
+  message: string
+): Promise<void> {
+  if (!resend) throw new Error("Email not configured");
+  const to = process.env.CONTACT_EMAIL ?? env.RESEND_FROM;
+  const safe = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const html = wrap(`
+    <h1 class="h1">New message: ${safe(subject)}</h1>
+    <p class="p"><strong>From:</strong> ${safe(name)} &lt;${safe(fromEmail)}&gt;</p>
+    <hr class="divider">
+    <p class="p" style="white-space:pre-wrap">${safe(message)}</p>
+    <hr class="divider">
+    <p class="small">Sent via analogqr.com/contact</p>
+  `);
+  await resend.emails.send({
+    from: FROM,
+    to,
+    replyTo: fromEmail,
+    subject: `[Contact] ${subject}`,
+    html,
+  });
+}
+
 export async function sendScanMilestoneEmail(
   to: string,
   qrName: string,
