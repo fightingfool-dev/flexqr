@@ -55,7 +55,10 @@ export async function sendContactEmail(
   subject: string,
   message: string
 ): Promise<void> {
-  if (!resend) throw new Error("Email not configured");
+  if (!resend) {
+    console.log("[contact-form] Resend not configured — submission:", { name, fromEmail, subject, message });
+    return;
+  }
   const to = process.env.CONTACT_EMAIL ?? env.RESEND_FROM;
   const safe = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const html = wrap(`
