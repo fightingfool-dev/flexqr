@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { requireUser, getUserWorkspaces } from "@/lib/auth";
+import { getUser, getUserWorkspaces } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { generateShortCode } from "@/lib/qr";
 import { PLAN_LIMITS } from "@/lib/plans";
@@ -8,7 +8,8 @@ import type { Plan } from "@/lib/database.types";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await requireUser();
+    const user = await getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const workspaces = await getUserWorkspaces(user.id);
     const workspace = workspaces[0];
     if (!workspace) return NextResponse.json({ error: "No workspace found." }, { status: 400 });

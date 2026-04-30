@@ -1,8 +1,9 @@
 "use server";
 
 import { randomBytes } from "crypto";
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { requireUser, getUserWorkspaces, getDbUser } from "@/lib/auth";
+import { requireUser, getUserWorkspaces, getDbUser, getUser } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { sendInviteEmail } from "@/lib/email";
 import { logError, isNextInternalError } from "@/lib/logger";
@@ -122,7 +123,11 @@ export async function removeMember(memberId: string): Promise<void> {
 
 export async function acceptInvitation(token: string): Promise<{ error?: string; workspaceId?: string }> {
   try {
-    const authUser = await requireUser();
+    // Use getUser (no redirect) so we can send back to the invite URL after sign-in
+    const authUser = await getUser();
+    if (!authUser) {
+      redirect(`/sign-in?next=${encodeURIComponent(`/invite/${token}`)}`);
+    }
 
     const { data: invite } = await supabaseAdmin
       .from("invitations")

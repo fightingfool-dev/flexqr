@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useState, useEffect, useSyncExternalStore } from "react";
 import { Copy, Check, Key, Trash2, Loader2, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,17 @@ function NewKeyBanner({ apiKey }: { apiKey: string }) {
   );
 }
 
+// Hydration-safe: returns "" on server, real origin on client
+function useOrigin() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => window.location.origin,
+    () => "",
+  );
+}
+
 export function ApiKeyManager({ existingKeys }: { existingKeys: ApiKeyRow[] }) {
+  const origin = useOrigin();
   const [state, action, pending] = useActionState<State, FormData>(createApiKey, initial);
   const [newKey, setNewKey] = useState<string | null>(null);
 
@@ -111,7 +121,7 @@ export function ApiKeyManager({ existingKeys }: { existingKeys: ApiKeyRow[] }) {
       <p className="text-xs text-muted-foreground">
         Include your key as: <code className="bg-muted px-1 rounded">Authorization: Bearer aqr_…</code>
         <br />
-        API endpoint: <code className="bg-muted px-1 rounded">GET/POST {typeof window !== "undefined" ? window.location.origin : ""}/api/v1/qr</code>
+        API endpoint: <code className="bg-muted px-1 rounded">GET/POST {origin}/api/v1/qr</code>
       </p>
     </div>
   );
