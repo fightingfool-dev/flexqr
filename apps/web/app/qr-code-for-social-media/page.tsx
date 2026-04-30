@@ -31,7 +31,7 @@ const FAQS = [
   },
   {
     q: "Can I change which social profile the QR links to?",
-    a: "Yes. With a dynamic QR code from AnalogQR, you can update the destination URL anytime — switch platforms, update usernames, or change to a new link without reprinting.",
+    a: "Yes. With a dynamic QR code from AnalogQR, you can update the destination URL anytime: switch platforms, update usernames, or change to a new link without reprinting.",
   },
   {
     q: "Where should I put a social media QR code?",
@@ -39,7 +39,7 @@ const FAQS = [
   },
   {
     q: "Can I track how many people scanned my social QR code?",
-    a: "Yes. Every scan is tracked — total counts, device types, locations, and time of day. See which placements drive the most social follows.",
+    a: "Yes. Every scan is tracked: total counts, device types, locations, and time of day. See which placements drive the most social follows.",
   },
   {
     q: "Which social platforms work with QR codes?",
@@ -53,7 +53,7 @@ export default function QRCodeForSocialMediaPage() {
       canonicalPath="/qr-code-for-social-media"
       headline="QR Code for Social Media"
       subheadline="Bridge the gap between offline and online. Let anyone follow you on Instagram, TikTok, YouTube, or LinkedIn with a single scan."
-      description="Every physical touchpoint — a business card, product package, event sign — is a missed opportunity to grow your social following. A social media QR code from AnalogQR turns those moments into new followers. Change the destination anytime, and track every scan."
+      description="Every physical touchpoint, from a business card to product packaging and event signs, is a missed opportunity to grow your social following. A social media QR code from AnalogQR turns those moments into new followers. Change the destination anytime, and track every scan."
       ctaHref="/create?type=website&usecase=social-media"
       ctaLabel="Create My Social Media QR Code"
       benefits={[
@@ -67,7 +67,7 @@ export default function QRCodeForSocialMediaPage() {
       steps={[
         {
           title: "Paste your social profile link",
-          body: "Enter your Instagram, TikTok, LinkedIn, or any social profile URL — or a Linktree-style page with all your profiles.",
+          body: "Enter your Instagram, TikTok, LinkedIn, or any social profile URL, or a Linktree-style page with all your profiles.",
         },
         {
           title: "Customize your QR code",

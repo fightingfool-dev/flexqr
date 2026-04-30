@@ -40,7 +40,7 @@ const FAQS = [
   },
   {
     q: "Can one QR code work on all my tables?",
-    a: "Yes. One dynamic QR code can be printed as many times as you like — on tables, windows, takeout bags, and flyers — and they all point to the same destination.",
+    a: "Yes. One dynamic QR code can be printed as many times as you like: on tables, windows, takeout bags, and flyers. They all point to the same destination.",
   },
   {
     q: "Is there a free plan for restaurant owners?",
@@ -53,14 +53,14 @@ export default function RestaurantMenuPage() {
     <UseCasePageLayout
       canonicalPath="/qr-code-for-restaurant-menu"
       headline="QR Code for Restaurant Menu"
-      subheadline="Update your menu daily — prices, specials, seasonal items — without reprinting a single QR code."
-      description="A printed menu is out of date the moment anything changes. AnalogQR gives you a fully hosted digital menu — build it right in your dashboard with sections, items, prices, and photos. No website, no third-party app. Print the QR code and update the menu anytime."
+      subheadline="Update prices, specials, and seasonal items daily. Zero reprinting, ever."
+      description="A printed menu is out of date the moment anything changes. AnalogQR gives you a fully hosted digital menu built right in your dashboard, with sections, items, prices, and photos. No website, no third-party app. Print the QR code once and update the menu anytime."
       ctaHref="/dashboard/qr-codes/new"
       ctaLabel="Build My Hosted Menu"
       benefits={[
-        "Build your menu directly in AnalogQR — no website or app needed",
+        "Build your menu directly in AnalogQR, no website or app needed",
         "Add sections, items, prices, descriptions, and photos",
-        "Update dishes, prices, and specials in seconds — no reprint ever",
+        "Update dishes, prices, and specials in seconds, no reprint ever",
         "Track how many customers scan your menu each day",
         "Custom QR colors and your logo to match your brand",
         "Works on tables, windows, takeout bags, and flyers",
@@ -68,7 +68,7 @@ export default function RestaurantMenuPage() {
       steps={[
         {
           title: "Build your menu",
-          body: "Add sections (Starters, Mains, Drinks), items with prices, descriptions, and photos — all inside AnalogQR.",
+          body: "Add sections (Starters, Mains, Drinks), items with prices, descriptions, and photos, all inside AnalogQR.",
         },
         {
           title: "Generate your QR code",
@@ -76,7 +76,7 @@ export default function RestaurantMenuPage() {
         },
         {
           title: "Print and update anytime",
-          body: "Place the QR on tables and menus. Update items, prices, or photos from your dashboard — no reprint needed.",
+          body: "Place the QR on tables and menus. Update items, prices, or photos from your dashboard, no reprint needed.",
         },
       ]}
       faqs={FAQS}

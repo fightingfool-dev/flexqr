@@ -89,7 +89,7 @@ export function WifiForm({ onNext, onBack }: Props) {
         </Label>
       </div>
       <p className="text-xs text-muted-foreground">
-        WiFi QR codes connect directly — scan counting is not available for this type.
+        WiFi QR codes connect directly. Scan counting is not available for this type.
       </p>
       <FormActions onBack={onBack} />
     </form>

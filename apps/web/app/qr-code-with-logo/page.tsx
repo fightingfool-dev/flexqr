@@ -43,7 +43,7 @@ const FAQS = [
   },
   {
     q: "Is the logo QR code also dynamic?",
-    a: "Yes. Logo QR codes on AnalogQR are fully dynamic — you can update the destination URL anytime without regenerating or re-downloading the code.",
+    a: "Yes. Logo QR codes on AnalogQR are fully dynamic. You can update the destination URL anytime without regenerating or re-downloading the code.",
   },
   {
     q: "Which plan includes the logo feature?",
@@ -57,14 +57,14 @@ export default function QRCodeWithLogoPage() {
       canonicalPath="/qr-code-with-logo"
       headline="QR Code with Logo"
       subheadline="Add your brand to every scan. Custom colors, your logo, and a dynamic QR code that's print-ready."
-      description="A plain black-and-white QR code works — but a branded QR code builds trust. AnalogQR lets you upload your logo, set your brand colors, and generate a custom QR code that looks as professional as your business. Still fully dynamic: edit the destination anytime."
+      description="A plain black-and-white QR code works, but a branded QR code builds trust. AnalogQR lets you upload your logo, set your brand colors, and generate a custom QR code that looks as professional as your business. Still fully dynamic: edit the destination anytime."
       ctaHref="/sign-up"
       ctaLabel="Create My Branded QR Code"
       benefits={[
         "Upload your logo and embed it directly in the QR code",
         "Custom foreground color to match your brand palette",
         "Download as PNG or SVG for any size print",
-        "Still fully dynamic — edit the destination URL anytime",
+        "Still fully dynamic: edit the destination URL anytime",
         "Track scans to measure branded QR code performance",
         "Works on business cards, packaging, flyers, and signage",
       ]}

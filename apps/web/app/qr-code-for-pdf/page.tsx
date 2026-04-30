@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "Can I track how many people open my PDF via QR?",
-    a: "Yes. Every scan of the QR code is tracked — total opens, device types, locations, and timing. See exactly how many people access your document.",
+    a: "Yes. Every scan of the QR code is tracked: total opens, device types, locations, and timing. See exactly how many people access your document.",
   },
   {
     q: "Does the PDF open on mobile?",
@@ -43,7 +43,7 @@ const FAQS = [
   },
   {
     q: "Can I use a QR code for a confidential document?",
-    a: "Only host confidential documents behind a login or with a password-protected link. The QR code itself is public — anyone who scans it can access the destination URL.",
+    a: "Only host confidential documents behind a login or with a password-protected link. The QR code itself is public. Anyone who scans it can access the destination URL.",
   },
 ];
 
@@ -52,8 +52,8 @@ export default function QRCodeForPdfPage() {
     <UseCasePageLayout
       canonicalPath="/qr-code-for-pdf"
       headline="QR Code for PDF"
-      subheadline="Share any document with a single scan. Menus, brochures, manuals, catalogs — link to your PDF and update it anytime."
-      description="Printing a document and printing a QR code are two different things. With AnalogQR, your QR code points to your hosted PDF — and when you update the document, you just swap the link. No reprinting, no new QR code, no hassle."
+      subheadline="Share any document with a single scan. Menus, brochures, manuals, catalogs. Link to your PDF and update it anytime."
+      description="Printing a document and printing a QR code are two different things. With AnalogQR, your QR code points to your hosted PDF. When you update the document, you just swap the link. No reprinting, no new QR code, no hassle."
       ctaHref="/create?type=website&usecase=pdf"
       ctaLabel="Create My PDF QR Code"
       benefits={[
@@ -75,7 +75,7 @@ export default function QRCodeForPdfPage() {
         },
         {
           title: "Print and update anytime",
-          body: "Add the QR to your materials. When the document changes, update the link — no new QR code needed.",
+          body: "Add the QR to your materials. When the document changes, update the link, no new QR code needed.",
         },
       ]}
       faqs={FAQS}

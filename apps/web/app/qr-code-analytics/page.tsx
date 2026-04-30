@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "Does scan tracking work without a redirect delay?",
-    a: "Yes. AnalogQR uses an edge-cached redirect so scans are tracked and users are redirected in milliseconds — no visible delay.",
+    a: "Yes. AnalogQR uses an edge-cached redirect so scans are tracked and users are redirected in milliseconds, no visible delay.",
   },
   {
     q: "Can I export my QR code scan data?",
@@ -43,7 +43,7 @@ const FAQS = [
   },
   {
     q: "Are individual scanner identities tracked?",
-    a: "No. AnalogQR tracks aggregate stats — scan counts, device types, and approximate locations. Individual user identities are never stored.",
+    a: "No. AnalogQR tracks aggregate stats: scan counts, device types, and approximate locations. Individual user identities are never stored.",
   },
   {
     q: "Can I see which QR code got the most scans?",
@@ -56,8 +56,8 @@ export default function QRCodeAnalyticsPage() {
     <UseCasePageLayout
       canonicalPath="/qr-code-analytics"
       headline="QR Code Analytics"
-      subheadline="See every scan in real time. Understand who's scanning, from where, on what device, and when — and prove your QR campaigns are working."
-      description="A QR code without analytics is a guess. AnalogQR gives every QR code built-in scan tracking — total scans, device breakdown, geographic data, and time trends — so you can measure what's working and optimize accordingly."
+      subheadline="See every scan in real time. Understand who's scanning, from where, on what device, and when. Prove your QR campaigns are working."
+      description="A QR code without analytics is a guess. AnalogQR gives every QR code built-in scan tracking: total scans, device breakdown, geographic data, and time trends, so you can measure what's working and optimize accordingly."
       ctaHref="/sign-up"
       ctaLabel="Start Tracking My QR Scans"
       benefits={[
@@ -66,12 +66,12 @@ export default function QRCodeAnalyticsPage() {
         "Approximate geographic data by country and city",
         "Per-code analytics to compare campaign performance",
         "Export scan data as CSV for external reporting",
-        "No technical setup — analytics work automatically on every code",
+        "No technical setup. Analytics work automatically on every code",
       ]}
       steps={[
         {
           title: "Create a QR code",
-          body: "Generate any dynamic QR code on AnalogQR. Analytics are enabled automatically — no setup required.",
+          body: "Generate any dynamic QR code on AnalogQR. Analytics are enabled automatically, no setup required.",
         },
         {
           title: "Share and deploy",

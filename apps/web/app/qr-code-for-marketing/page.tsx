@@ -27,7 +27,7 @@ const RELATED = [
 const FAQS = [
   {
     q: "How do I use QR codes in a marketing campaign?",
-    a: "Add a unique QR code to each channel — flyers, mailers, billboards, in-store signage, packaging — and track scan counts per code to measure which channel performs best.",
+    a: "Add a unique QR code to each channel (flyers, mailers, billboards, in-store signage, packaging) and track scan counts per code to measure which channel performs best.",
   },
   {
     q: "Can I A/B test different QR code destinations?",
@@ -39,7 +39,7 @@ const FAQS = [
   },
   {
     q: "Can I use QR codes in digital marketing too?",
-    a: "Yes. QR codes work in digital ads, email newsletters, social posts, and presentation slides — anywhere a user can scan a screen or printout.",
+    a: "Yes. QR codes work in digital ads, email newsletters, social posts, and presentation slides, anywhere a user can scan a screen or printout.",
   },
   {
     q: "How do I prove QR code marketing ROI?",
@@ -57,11 +57,11 @@ export default function QRCodeForMarketingPage() {
       canonicalPath="/qr-code-for-marketing"
       headline="QR Code for Marketing"
       subheadline="Track every offline impression. Add dynamic, trackable QR codes to your campaigns and finally measure print marketing ROI."
-      description="Print advertising has always been hard to measure — until now. AnalogQR gives every marketing channel its own trackable QR code so you can compare scan rates across flyers, mailers, signage, and packaging. Update campaign links without reprinting. Prove what works."
+      description="Print advertising has always been hard to measure. Until now. AnalogQR gives every marketing channel its own trackable QR code so you can compare scan rates across flyers, mailers, signage, and packaging. Update campaign links without reprinting. Prove what works."
       ctaHref="/sign-up"
       ctaLabel="Start Tracking My Campaigns"
       benefits={[
-        "One unique QR per channel — compare scan rates across campaigns",
+        "One unique QR per channel. Compare scan rates across campaigns",
         "Update campaign landing pages without reprinting materials",
         "Track scans by device, location, and time of day",
         "Branded QR codes with your logo and colors",
@@ -71,7 +71,7 @@ export default function QRCodeForMarketingPage() {
       steps={[
         {
           title: "Create a QR per campaign channel",
-          body: "Generate a separate QR code for each marketing channel — flyers, mailers, in-store displays — to track each independently.",
+          body: "Generate a separate QR code for each marketing channel (flyers, mailers, in-store displays) to track each independently.",
         },
         {
           title: "Deploy across your materials",

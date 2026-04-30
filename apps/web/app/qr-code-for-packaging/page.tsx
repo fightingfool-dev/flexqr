@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "Can I link to a video tutorial instead of a text manual?",
-    a: "Absolutely. Link to any publicly accessible URL — a YouTube video, hosted PDF, product webpage, or support portal. You can change it anytime.",
+    a: "Absolutely. Link to any publicly accessible URL: a YouTube video, hosted PDF, product webpage, or support portal. You can change it anytime.",
   },
   {
     q: "Can I track how many customers scan my product?",
@@ -52,7 +52,7 @@ export default function PackagingPage() {
     <UseCasePageLayout
       canonicalPath="/qr-code-for-packaging"
       headline="QR Code for Packaging"
-      subheadline="Turn your product packaging into a live touchpoint. Link to instructions, promotions, or support — and update anytime."
+      subheadline="Turn your product packaging into a live touchpoint. Link to instructions, promotions, or support. Update anytime."
       description="Printed packaging is permanent — but what's behind your QR code doesn't have to be. AnalogQR lets you point your packaging QR to instructions today, a seasonal promotion tomorrow, and a warranty registration next month. One printed code, infinite flexibility."
       ctaHref="/create?type=website&usecase=packaging"
       ctaLabel="Create My Packaging QR Code"

@@ -27,7 +27,7 @@ const RELATED = [
 const FAQS = [
   {
     q: "How does a WiFi QR code work?",
-    a: "A WiFi QR code encodes your network name (SSID), password, and security type. When scanned, the phone offers to join the network automatically — no typing required.",
+    a: "A WiFi QR code encodes your network name (SSID), password, and security type. When scanned, the phone offers to join the network automatically, no typing required.",
   },
   {
     q: "Is it safe to share a WiFi QR code?",
@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "What happens if I change my WiFi password?",
-    a: "You'll need to generate a new WiFi QR code with the updated credentials. For dynamic destination links (websites, menus) you can update without regenerating — WiFi QR codes encode credentials directly.",
+    a: "You'll need to generate a new WiFi QR code with the updated credentials. For dynamic destination links (websites, menus) you can update without regenerating; WiFi QR codes encode credentials directly.",
   },
   {
     q: "Can I add my logo to the WiFi QR code?",
@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "Can I track how many guests scan the WiFi QR code?",
-    a: "Yes. AnalogQR's WiFi QR codes support scan analytics — see total scans, scan times, and device types.",
+    a: "Yes. AnalogQR's WiFi QR codes support scan analytics: total scans, scan times, and device types.",
   },
 ];
 
@@ -56,12 +56,12 @@ export default function QRCodeForWifiPage() {
     <UseCasePageLayout
       canonicalPath="/qr-code-for-wifi"
       headline="QR Code for WiFi"
-      subheadline="Let guests connect to your WiFi instantly. One scan — no passwords to type, no awkward spelling out your network name."
+      subheadline="Let guests connect to your WiFi instantly. One scan, no passwords to type, no awkward spelling out your network name."
       description="Typing a WiFi password on a phone keypad is frustrating for everyone. A WiFi QR code eliminates the friction entirely: guests scan once and they're connected. Perfect for cafes, restaurants, hotels, offices, and events."
       ctaHref="/create?type=wifi"
       ctaLabel="Create My WiFi QR Code"
       benefits={[
-        "Guests connect to WiFi with a single scan — no typing",
+        "Guests connect to WiFi with a single scan, no typing",
         "Works on all modern iOS and Android devices",
         "Add your logo and brand colors for a professional look",
         "Print on table tents, wall signs, or add to your menu QR",

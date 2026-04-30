@@ -7,7 +7,7 @@ const PLANS = [
   {
     name: "Free",
     price: "$0",
-    description: "Try it out",
+    description: "Try it out, no card needed",
     features: ["1 QR code", "Basic analytics", "Dynamic redirects"],
     cta: "Start Free",
     href: "/sign-up",
@@ -17,14 +17,15 @@ const PLANS = [
   {
     name: "Starter",
     price: "$10",
-    per: "/month",
-    description: "For individuals",
+    per: "per month",
+    description: "For individuals and freelancers",
     features: [
       "5 QR codes",
       "Full analytics",
       "Dynamic redirects",
       "Custom QR colors",
       "Logo on QR code",
+      "API access",
       "Priority support",
     ],
     cta: "Get Started",
@@ -35,7 +36,7 @@ const PLANS = [
   {
     name: "Pro",
     price: "$29",
-    per: "/month",
+    per: "per month",
     description: "For growing teams",
     features: [
       "50 QR codes",
@@ -44,6 +45,7 @@ const PLANS = [
       "Custom QR colors",
       "Logo on QR code",
       "Custom domains",
+      "Team invites",
       "Priority support",
     ],
     cta: "Go Pro",
@@ -57,11 +59,11 @@ const PLANS = [
     description: "For organisations at scale",
     features: [
       "Unlimited QR codes",
-      "Advanced analytics & exports",
+      "Advanced analytics and exports",
       "Custom domains",
       "Team management",
       "API access",
-      "SSO / SAML",
+      "SSO and SAML",
       "SLA guarantee",
       "Dedicated support",
     ],
@@ -74,73 +76,76 @@ const PLANS = [
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="border-t px-4 sm:px-6 py-20">
-      <div className="mx-auto max-w-6xl space-y-10">
-        <div className="text-center space-y-2">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            Simple, honest pricing
+    <section id="pricing" className="border-t bg-zinc-50/60 px-4 sm:px-6 py-24">
+      <div className="mx-auto max-w-6xl space-y-14">
+
+        <div className="text-center space-y-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">Pricing</p>
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-[-0.03em]">
+            Simple, honest pricing.
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-base">
             Start free. Upgrade when you need more. Cancel anytime.
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {PLANS.map((plan) => (
             <Card
               key={plan.name}
-              className={`relative shadow-sm flex flex-col ${
+              className={`relative shadow-sm flex flex-col transition-shadow duration-200 ${
                 plan.enterprise
-                  ? "bg-foreground text-background border-foreground"
+                  ? "bg-foreground text-background border-foreground shadow-xl"
                   : plan.highlighted
-                  ? "border-primary ring-1 ring-primary"
-                  : ""
+                  ? "border-primary shadow-lg shadow-primary/10 ring-1 ring-primary/50"
+                  : "hover:shadow-md"
               }`}
             >
               {plan.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
-                    Popular
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <span className="bg-primary text-primary-foreground text-[10px] font-bold px-3 py-1 rounded-full tracking-wide uppercase shadow-sm shadow-primary/30">
+                    Most popular
                   </span>
                 </div>
               )}
               {plan.enterprise && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-amber-400 text-amber-950 text-xs font-semibold px-3 py-1 rounded-full">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <span className="bg-amber-400 text-amber-950 text-[10px] font-bold px-3 py-1 rounded-full tracking-wide uppercase">
                     Enterprise
                   </span>
                 </div>
               )}
-              <CardHeader className="pb-4 pt-6">
-                <p className={`font-semibold ${plan.enterprise ? "text-background" : ""}`}>
+              <CardHeader className="pb-4 pt-7">
+                <p className={`text-xs font-bold uppercase tracking-[0.1em] ${plan.enterprise ? "text-background/60" : "text-muted-foreground"}`}>
                   {plan.name}
                 </p>
-                <div className="mt-1">
-                  <span className={`text-4xl font-bold tabular-nums ${plan.enterprise ? "text-background" : ""}`}>
+                <div className="mt-2 flex items-end gap-1">
+                  <span className={`text-4xl font-bold tabular-nums tracking-[-0.04em] ${plan.enterprise ? "text-background" : ""}`}>
                     {plan.price}
                   </span>
                   {plan.per && (
-                    <span className={`text-sm ${plan.enterprise ? "text-background/60" : "text-muted-foreground"}`}>
+                    <span className={`text-sm pb-0.5 ${plan.enterprise ? "text-background/50" : "text-muted-foreground"}`}>
                       {plan.per}
                     </span>
                   )}
                 </div>
-                <p className={`text-sm ${plan.enterprise ? "text-background/60" : "text-muted-foreground"}`}>
+                <p className={`text-xs mt-1 ${plan.enterprise ? "text-background/50" : "text-muted-foreground"}`}>
                   {plan.description}
                 </p>
               </CardHeader>
-              <CardContent className="space-y-5 flex flex-col flex-1">
-                <ul className="space-y-2 flex-1">
+              <CardContent className="space-y-5 flex flex-col flex-1 pt-0">
+                <div className="h-px bg-border opacity-30" />
+                <ul className="space-y-2.5 flex-1">
                   {plan.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-sm">
-                      <Check className={`h-4 w-4 shrink-0 ${plan.enterprise ? "text-amber-400" : "text-primary"}`} />
+                    <li key={f} className="flex items-center gap-2.5 text-sm">
+                      <Check className={`h-3.5 w-3.5 shrink-0 ${plan.enterprise ? "text-amber-400" : "text-primary"}`} />
                       <span className={plan.enterprise ? "text-background/80" : ""}>{f}</span>
                     </li>
                   ))}
                 </ul>
                 <TrackedButton
                   href={plan.href}
-                  className={`w-full mt-auto ${
+                  className={`w-full mt-auto font-semibold ${
                     plan.enterprise
                       ? "bg-amber-400 text-amber-950 hover:bg-amber-300 border-0"
                       : ""
@@ -157,7 +162,7 @@ export function PricingSection() {
         </div>
 
         <p className="text-center text-xs text-muted-foreground">
-          All plans include dynamic redirects and scan analytics · No hidden fees · Cancel anytime
+          All plans include dynamic redirects and scan analytics. No hidden fees. Cancel anytime.
         </p>
       </div>
     </section>

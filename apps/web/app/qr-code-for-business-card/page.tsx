@@ -35,11 +35,11 @@ const FAQS = [
   },
   {
     q: "What if I change jobs or update my website?",
-    a: "Just update the destination URL in your dashboard. Everyone who scans your existing cards will automatically reach the new link — no reprinting needed.",
+    a: "Just update the destination URL in your dashboard. Everyone who scans your existing cards will automatically reach the new link, no reprinting needed.",
   },
   {
     q: "Can I see who scanned my business card?",
-    a: "You see aggregate analytics: total scans, device types, and approximate locations. Individual identities are not tracked — it's privacy-friendly scan counting.",
+    a: "You see aggregate analytics: total scans, device types, and approximate locations. Individual identities are not tracked. It's privacy-friendly scan counting.",
   },
   {
     q: "Can I use the same QR on multiple card designs?",
@@ -53,13 +53,13 @@ export default function BusinessCardPage() {
       canonicalPath="/qr-code-for-business-card"
       headline="QR Code for Business Card"
       subheadline="Make every business card smarter. One scan connects people to your portfolio, LinkedIn, or booking page."
-      description="Your business card has limited space — your digital card doesn't. AnalogQR gives you a hosted digital business card page with your name, title, company, phone, email, website, and address. Scanners see a beautiful mobile card and can save your contact in one tap. No website required."
+      description="Your printed card has limited space. Your digital card has none. AnalogQR gives you a hosted digital business card with your name, title, company, phone, email, website, and address. Scanners see a beautiful mobile card and can save your contact in one tap. No website required."
       ctaHref="/dashboard/qr-codes/new"
       ctaLabel="Build My Digital Card"
       benefits={[
-        "Hosted digital card — name, title, company, phone, email, address",
+        "Hosted digital card: name, title, company, phone, email, address",
         "One-tap 'Save to Contacts' so people never lose your details",
-        "No website required — the card is built and hosted by AnalogQR",
+        "No website required. The card is built and hosted by AnalogQR",
         "Update your info anytime without printing new cards",
         "See how many people scan and save your contact",
         "Custom-colored QR code that looks premium on any printed card",

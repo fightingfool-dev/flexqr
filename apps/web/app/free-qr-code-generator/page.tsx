@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "Can I edit the URL after creating a free QR code?",
-    a: "Yes. Dynamic QR codes let you change the destination URL anytime from your dashboard — even on the free plan.",
+    a: "Yes. Dynamic QR codes let you change the destination URL anytime from your dashboard, even on the free plan.",
   },
   {
     q: "Does the free plan include scan tracking?",
@@ -57,11 +57,11 @@ export default function FreeQRCodeGeneratorPage() {
       canonicalPath="/free-qr-code-generator"
       headline="Free QR Code Generator"
       subheadline="Create a dynamic, trackable QR code in seconds. No credit card. No expiry. Edit the destination URL anytime."
-      description="Most free QR code generators give you a static code that can never change. AnalogQR gives you a free dynamic QR code — one that lets you update the destination URL anytime without generating a new code. Track scans, customize the look, and never pay for reprints."
+      description="Most free QR code generators give you a static code that can never change. AnalogQR gives you a free dynamic QR code that lets you update the destination URL anytime without generating a new code. Track scans, customize the look, and never pay for reprints."
       ctaHref="/sign-up"
       ctaLabel="Generate My Free QR Code"
       benefits={[
-        "Completely free — no credit card required to start",
+        "Completely free, no credit card required to start",
         "Dynamic QR code: edit the destination URL anytime",
         "Built-in scan tracking on every free code",
         "Download as high-resolution PNG for print or digital use",
@@ -71,7 +71,7 @@ export default function FreeQRCodeGeneratorPage() {
       steps={[
         {
           title: "Sign up for free",
-          body: "Create a free AnalogQR account in seconds — no credit card required.",
+          body: "Create a free AnalogQR account in seconds, no credit card required.",
         },
         {
           title: "Enter your destination URL",

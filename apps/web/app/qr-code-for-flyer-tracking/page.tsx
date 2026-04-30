@@ -28,15 +28,15 @@ const RELATED = [
 const FAQS = [
   {
     q: "How do I prove my flyer campaign is working?",
-    a: "Each QR code has its own scan counter in your dashboard. You see total scans, scan times, and device types — concrete data to prove real-world engagement from your print campaign.",
+    a: "Each QR code has its own scan counter in your dashboard. You see total scans, scan times, and device types. Concrete data to prove real-world engagement from your print campaign.",
   },
   {
     q: "Can I use different QR codes for different flyer placements?",
-    a: "Yes. Create a separate QR code for each placement — coffee shops, bulletin boards, direct mail — and compare their scan counts to see which locations perform best.",
+    a: "Yes. Create a separate QR code for each placement (coffee shops, bulletin boards, direct mail) and compare their scan counts to see which locations perform best.",
   },
   {
     q: "What if I want to redirect to a new offer after printing?",
-    a: "Just update the destination URL in your dashboard. The printed QR code immediately starts pointing to the new link — no reprinting required.",
+    a: "Just update the destination URL in your dashboard. The printed QR code immediately starts pointing to the new link, no reprinting required.",
   },
   {
     q: "Do people need an app to scan the QR code?",
@@ -54,12 +54,12 @@ export default function FlyerTrackingPage() {
       canonicalPath="/qr-code-for-flyer-tracking"
       headline="QR Code for Flyer Tracking"
       subheadline="Know exactly which flyers are driving results. Track every scan and prove your offline campaigns are working."
-      description="Flyers are one of the most cost-effective marketing tools — but without tracking, you're flying blind. AnalogQR adds a scannable, trackable QR code to your flyers so you can measure real-world engagement and optimize your campaigns."
+      description="Flyers are one of the most cost-effective marketing tools, but without tracking, you're flying blind. AnalogQR adds a scannable, trackable QR code to your flyers so you can measure real-world engagement and optimize your campaigns."
       ctaHref="/create?type=website&usecase=flyer-tracking"
       ctaLabel="Create My Flyer QR Code"
       benefits={[
         "See exactly how many people scan your flyer each day",
-        "Change the destination URL after printing — redirect to new campaigns",
+        "Change the destination URL after printing. Redirect to new campaigns",
         "Compare performance across different flyer placements",
         "Track scans by time and date to understand when your audience engages",
         "Custom-branded QR codes that look professional on print materials",
@@ -68,7 +68,7 @@ export default function FlyerTrackingPage() {
       steps={[
         {
           title: "Paste your campaign link",
-          body: "Enter the URL you want your flyer to point to — a landing page, offer, or sign-up form.",
+          body: "Enter the URL you want your flyer to point to: a landing page, offer, or sign-up form.",
         },
         {
           title: "Generate your trackable QR code",

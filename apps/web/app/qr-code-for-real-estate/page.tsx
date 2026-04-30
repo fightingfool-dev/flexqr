@@ -28,11 +28,11 @@ const RELATED = [
 const FAQS = [
   {
     q: "How many QR codes do I need per property listing?",
-    a: "One per listing is typical. Print it on all materials — yard signs, flyers, brochures — and all scans are counted together in your dashboard.",
+    a: "One per listing is typical. Print it on all materials (yard signs, flyers, brochures) and all scans are counted together in your dashboard.",
   },
   {
     q: "Can I redirect the QR code after a property sells?",
-    a: "Yes. Once a property sells, update the destination to your agent profile, similar active listings, or a 'sold' landing page — without touching the printed materials.",
+    a: "Yes. Once a property sells, update the destination to your agent profile, similar active listings, or a 'sold' landing page, without touching the printed materials.",
   },
   {
     q: "Can I see which listing gets the most buyer interest?",
@@ -40,7 +40,7 @@ const FAQS = [
   },
   {
     q: "Does the QR code work on yard sign materials?",
-    a: "Yes. A high-contrast QR code printed on any material — corrugated plastic, metal, vinyl — will scan reliably with any smartphone camera.",
+    a: "Yes. A high-contrast QR code printed on any material (corrugated plastic, metal, vinyl) will scan reliably with any smartphone camera.",
   },
   {
     q: "Can I use the same QR code on multiple marketing materials for the same listing?",
@@ -53,8 +53,8 @@ export default function RealEstatePage() {
     <UseCasePageLayout
       canonicalPath="/qr-code-for-real-estate"
       headline="QR Code for Real Estate"
-      subheadline="Know exactly which listings are getting attention. Track every scan from yard signs, flyers, and print ads — and update the link anytime."
-      description="Print is still one of the most powerful tools in real estate — but it gives you zero data. AnalogQR adds a trackable, dynamic QR code to every listing so you can measure buyer interest in real time, update links without reprinting, and prove your marketing is working."
+      subheadline="Know exactly which listings are getting attention. Track every scan from yard signs, flyers, and print ads. Update the link anytime."
+      description="Print is still one of the most powerful tools in real estate, but it gives you zero data. AnalogQR adds a trackable, dynamic QR code to every listing so you can measure buyer interest in real time, update links without reprinting, and prove your marketing is working."
       ctaHref="/create?type=website&usecase=real-estate"
       ctaLabel="Create My Listing QR Code"
       benefits={[
@@ -63,7 +63,7 @@ export default function RealEstatePage() {
         "Works on yard signs, flyers, window stickers, and mailers",
         "See scan counts by time and date to gauge buyer interest",
         "Custom-branded QR colors to match your agency identity",
-        "One QR code per listing — redirect to virtual tour, photos, or contact form",
+        "One QR code per listing: redirect to virtual tour, photos, or contact form",
       ]}
       steps={[
         {

@@ -44,7 +44,7 @@ export function StylePanel({ settings, onChange }: Props) {
         {lowContrast && (
           <div className="mt-2 flex items-center gap-1.5 text-xs text-amber-600">
             <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-            Low contrast — QR may not scan reliably (ratio {contrast.toFixed(1)}:1)
+            Low contrast. QR may not scan reliably (ratio {contrast.toFixed(1)}:1)
           </div>
         )}
       </div>

@@ -116,7 +116,7 @@ Booking Link,https://cal.com/myname`}
         >
           <Upload className="h-6 w-6" />
           <span className="text-sm font-medium">
-            {rows.length > 0 ? `${rows.length} rows loaded — click to replace` : "Click to upload CSV file"}
+            {rows.length > 0 ? `${rows.length} rows loaded. Click to replace.` : "Click to upload CSV file"}
           </span>
         </button>
         <input

@@ -39,7 +39,7 @@ function NewKeyBanner({ apiKey }: { apiKey: string }) {
   const [visible, setVisible] = useState(false);
   return (
     <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 space-y-2">
-      <p className="text-sm font-semibold text-emerald-800">API key created — copy it now</p>
+      <p className="text-sm font-semibold text-emerald-800">API key created. Copy it now</p>
       <p className="text-xs text-emerald-700">This key is only shown once. Store it somewhere safe.</p>
       <div className="flex items-center gap-2 bg-white rounded-md border border-emerald-200 px-3 py-2">
         <code className="flex-1 text-xs font-mono text-emerald-900 truncate">

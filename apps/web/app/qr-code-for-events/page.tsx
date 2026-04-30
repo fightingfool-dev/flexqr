@@ -27,7 +27,7 @@ const RELATED = [
 const FAQS = [
   {
     q: "Can I change the QR destination before and after the event?",
-    a: "Yes. Update the link anytime from your dashboard — point to the registration page before the event, the live stream during, and a recap or feedback survey afterwards.",
+    a: "Yes. Update the link anytime from your dashboard: point to the registration page before the event, the live stream during, and a recap or feedback survey afterwards.",
   },
   {
     q: "Can I use the same QR code on all my event materials?",
@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "How do I track which venue signage gets the most scans?",
-    a: "Create a separate QR code for each placement — entrance banner, registration desk, programs — then compare scan counts in your dashboard to see what drives engagement.",
+    a: "Create a separate QR code for each placement (entrance banner, registration desk, programs), then compare scan counts in your dashboard to see what drives engagement.",
   },
   {
     q: "Is there a limit to how many scans I can track?",
@@ -43,7 +43,7 @@ const FAQS = [
   },
   {
     q: "Can attendees scan the QR without a special app?",
-    a: "Yes. Any modern smartphone camera on iOS or Android can scan a QR code natively — no app download required.",
+    a: "Yes. Any modern smartphone camera on iOS or Android can scan a QR code natively, no app download required.",
   },
 ];
 
@@ -52,13 +52,13 @@ export default function EventsPage() {
     <UseCasePageLayout
       canonicalPath="/qr-code-for-events"
       headline="QR Code for Events"
-      subheadline="Drive registrations, share schedules, and measure engagement — all from a single scannable QR code."
-      description="From conferences to community meetups, AnalogQR gives event organizers a dynamic QR code that works before, during, and after the event. Update the destination as the event evolves — from registration to agenda to post-event recap — without changing a single printed material."
+      subheadline="Drive registrations, share schedules, and measure engagement. All from a single scannable QR code."
+      description="From conferences to community meetups, AnalogQR gives event organizers a dynamic QR code that works before, during, and after the event. Update the destination as the event evolves: from registration to agenda to post-event recap, without changing a single printed material."
       ctaHref="/create?type=website&usecase=events"
       ctaLabel="Create My Event QR Code"
       benefits={[
         "Link to registration, agenda, or live event stream in one code",
-        "Update the destination as the event evolves — no reprint needed",
+        "Update the destination as the event evolves, no reprint needed",
         "Track how many attendees scan your event materials",
         "Use on banners, programs, badges, and social posts",
         "Branded QR colors to match your event identity",

@@ -190,7 +190,7 @@ export function QRStudio({
               {downloadFormat === "jpg" && "JPG is ideal for sharing and printing"}
               {downloadFormat === "png" && "PNG preserves transparency and sharp edges"}
               {downloadFormat === "svg" && "SVG is infinitely scalable for print and design"}
-              {downloadFormat === "pdf" && "PDF opens a print dialog — choose Save as PDF"}
+              {downloadFormat === "pdf" && "PDF opens a print dialog. Choose Save as PDF."}
             </p>
           </div>
 

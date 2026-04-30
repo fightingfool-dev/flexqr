@@ -110,7 +110,7 @@ export default async function QRAnalyticsPage({
       {/* Time series */}
       <div className="rounded-xl border bg-card p-5 shadow-sm">
         <h2 className="text-sm font-medium mb-4">
-          Scans over time — {rangeLabel[range]}
+          Scans over time · {rangeLabel[range]}
         </h2>
         <ScansChart
           data={analytics.timeSeries}

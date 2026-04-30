@@ -113,7 +113,7 @@ export function QRBuilder({ isPaidPlan }: { isPaidPlan?: boolean }) {
               required
             />
             <p className="text-xs text-muted-foreground">
-              Internal label — not visible to scanners.
+              Internal label. Not visible to scanners.
             </p>
           </div>
 

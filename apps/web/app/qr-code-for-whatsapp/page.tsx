@@ -31,11 +31,11 @@ const FAQS = [
   },
   {
     q: "Do I need a WhatsApp Business account?",
-    a: "No. A WhatsApp QR code works with any WhatsApp number — personal or business. WhatsApp Business adds features like automated replies and business profiles.",
+    a: "No. A WhatsApp QR code works with any WhatsApp number, personal or business. WhatsApp Business adds features like automated replies and business profiles.",
   },
   {
     q: "Can I include a pre-filled message in the QR code?",
-    a: "Yes. Include a pre-written message in the link so the customer sees a ready-to-send opener when they scan — for example, 'Hi, I'd like to book a table for 2.'",
+    a: "Yes. Include a pre-written message in the link so the customer sees a ready-to-send opener when they scan. For example: 'Hi, I'd like to book a table for 2.'",
   },
   {
     q: "Can I change the phone number or message after printing?",
@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "Can I track how many people scan my WhatsApp QR code?",
-    a: "Yes. AnalogQR tracks every scan — total count, device types, locations, and timing.",
+    a: "Yes. AnalogQR tracks every scan: total count, device types, locations, and timing.",
   },
 ];
 
@@ -62,7 +62,7 @@ export default function QRCodeForWhatsappPage() {
       ctaLabel="Create My WhatsApp QR Code"
       benefits={[
         "Opens a WhatsApp chat to your number with a single scan",
-        "Works with any WhatsApp number — personal or business",
+        "Works with any WhatsApp number, personal or business",
         "Include a pre-filled message to lower the reply barrier",
         "Dynamic: update the number or message without reprinting",
         "Track how many scans convert to conversations",

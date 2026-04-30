@@ -27,11 +27,11 @@ const RELATED = [
 const FAQS = [
   {
     q: "What is a dynamic QR code?",
-    a: "A dynamic QR code redirects through a short link you control. The code itself never changes — only the destination URL. You can update where it points anytime from your dashboard, even after printing.",
+    a: "A dynamic QR code redirects through a short link you control. The code itself never changes; only the destination URL does. You can update where it points anytime from your dashboard, even after printing.",
   },
   {
     q: "What is the difference between a static and dynamic QR code?",
-    a: "A static QR code encodes the destination URL directly into the pattern — it can never change. A dynamic QR code encodes a short redirect URL, so you can change the final destination anytime without generating a new code.",
+    a: "A static QR code encodes the destination URL directly into the pattern and can never change. A dynamic QR code encodes a short redirect URL, so you can change the final destination anytime without generating a new code.",
   },
   {
     q: "Can I track scans on a dynamic QR code?",
@@ -57,16 +57,16 @@ export default function DynamicQRCodeGeneratorPage() {
       canonicalPath="/dynamic-qr-code-generator"
       headline="Dynamic QR Code Generator"
       subheadline="Create QR codes you can edit after printing. Change the destination, track every scan, and never reprint."
-      description="A dynamic QR code is the only QR code worth printing. Unlike static QR codes, dynamic codes let you update the destination URL at any time — so yesterday's printed flyer can point to today's offer. AnalogQR makes it free to start."
+      description="A dynamic QR code is the only QR code worth printing. Unlike static QR codes, dynamic codes let you update the destination URL at any time. Yesterday's printed flyer can point to today's offer. AnalogQR makes it free to start."
       ctaHref="/sign-up"
       ctaLabel="Create a Dynamic QR Code"
       benefits={[
-        "Edit the destination URL anytime — even after printing",
+        "Edit the destination URL anytime, even after printing",
         "Track scans by device, location, and time",
-        "One printed code works forever — no reprints when things change",
+        "One printed code works forever, no reprints when things change",
         "Customize colors and add your logo for a branded look",
         "Works with any URL: websites, PDFs, videos, and more",
-        "Free plan available — no credit card required",
+        "Free plan available, no credit card required",
       ]}
       steps={[
         {
@@ -79,7 +79,7 @@ export default function DynamicQRCodeGeneratorPage() {
         },
         {
           title: "Print, share, and update",
-          body: "Use the QR anywhere. Update the destination from your dashboard whenever you need — no new code required.",
+          body: "Use the QR anywhere. Update the destination from your dashboard whenever you need, no new code required.",
         },
       ]}
       faqs={FAQS}

@@ -94,7 +94,7 @@ export default async function EditQRCodePage({
           <Palette className="h-4 w-4 mt-0.5 shrink-0" />
           <span>
             Your QR code is ready. Customize colors, dot shapes, a logo, and a
-            frame below — then hit <strong>Save design</strong> to apply.
+            frame below, then hit <strong>Save design</strong> to apply.
           </span>
         </div>
       )}

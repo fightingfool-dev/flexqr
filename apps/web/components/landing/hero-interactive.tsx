@@ -2,21 +2,11 @@
 
 import { useState, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Copy, Check, Download, ArrowRight } from "lucide-react";
+import { Copy, Check, Download, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { normalizeUrl } from "@/lib/url";
-
-const MOBILE_USE_CASES = [
-  { label: "Restaurant Menu", href: "/create?type=website&usecase=restaurant-menu" },
-  { label: "Flyer Tracking", href: "/create?type=website&usecase=flyer-tracking" },
-  { label: "Business Card", href: "/create?type=vcard&usecase=business-card" },
-  { label: "Events", href: "/create?type=website&usecase=events" },
-  { label: "Packaging", href: "/create?type=website&usecase=packaging" },
-  { label: "Real Estate", href: "/create?type=website&usecase=real-estate" },
-];
 
 const APP_ORIGIN = (
   process.env.NEXT_PUBLIC_APP_URL ?? "https://analogqr.com"
@@ -24,6 +14,12 @@ const APP_ORIGIN = (
 
 const SAMPLE_CODE = "summer24";
 const SAMPLE_URL = `${APP_ORIGIN}/r/${SAMPLE_CODE}`;
+
+const TRUST_ITEMS = [
+  "Free plan, no card needed",
+  "Update destination anytime",
+  "Real-time scan analytics",
+];
 
 function derivePreviewCode(url: string): string {
   let h = 5381;
@@ -70,45 +66,35 @@ function QRPreviewCard({
   }
 
   return (
-    <div className="rounded-2xl border bg-white shadow-lg p-6 flex flex-col items-center gap-4 w-full">
+    <div className="relative rounded-2xl border border-border/60 bg-white shadow-2xl shadow-indigo-500/10 p-7 flex flex-col items-center gap-5 w-full">
+      {/* Subtle glow behind card */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+
+      {/* Live indicator */}
+      <div className="flex items-center gap-1.5 self-end">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">Live preview</span>
+      </div>
+
       {/* QR image */}
       <div
-        className="w-44 h-44 shrink-0"
+        className="w-44 h-44 shrink-0 rounded-lg overflow-hidden"
         dangerouslySetInnerHTML={{ __html: svgMarkup }}
       />
 
-      {/* Short link + badge */}
-      <div className="text-center space-y-1.5">
-        <p className="text-xs font-mono text-muted-foreground truncate max-w-[200px]">
-          {APP_ORIGIN.replace(/^https?:\/\//, "")}/r/{shortCode}
-        </p>
-        <Badge variant="secondary" className="text-xs">
-          Editable anytime
-        </Badge>
-      </div>
+      {/* Short link */}
+      <p className="text-xs font-mono text-muted-foreground truncate max-w-[200px] bg-muted/60 px-3 py-1.5 rounded-full">
+        {APP_ORIGIN.replace(/^https?:\/\//, "")}/r/{shortCode}
+      </p>
 
       {/* Actions */}
       <div className="flex gap-2 w-full">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1"
-          onClick={handleCopy}
-        >
-          {copied ? (
-            <Check className="h-3.5 w-3.5 mr-1.5 text-green-600" />
-          ) : (
-            <Copy className="h-3.5 w-3.5 mr-1.5" />
-          )}
-          {copied ? "Copied!" : "Copy link"}
+        <Button variant="outline" size="sm" className="flex-1 text-xs h-8" onClick={handleCopy}>
+          {copied ? <Check className="h-3 w-3 mr-1.5 text-emerald-600" /> : <Copy className="h-3 w-3 mr-1.5" />}
+          {copied ? "Copied" : "Copy link"}
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1"
-          onClick={handleDownload}
-        >
-          <Download className="h-3.5 w-3.5 mr-1.5" />
+        <Button variant="outline" size="sm" className="flex-1 text-xs h-8" onClick={handleDownload}>
+          <Download className="h-3 w-3 mr-1.5" />
           Download
         </Button>
       </div>
@@ -153,9 +139,7 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
     }
 
     generate().catch(console.error);
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [url, initialQrSvg]);
 
   function handleSubmit(e: React.FormEvent) {
@@ -168,106 +152,97 @@ export function HeroInteractive({ initialQrSvg, isLoggedIn }: Props) {
   }
 
   return (
-    <section className="px-4 sm:px-6 py-12 sm:py-20 lg:py-28 mx-auto max-w-6xl">
-      <div className="grid gap-12 lg:gap-16 lg:grid-cols-[1fr,320px] lg:items-center">
-        {/* Left column: copy + input */}
+    <section className="relative px-4 sm:px-6 pt-16 pb-20 sm:pt-20 sm:pb-28 lg:pt-24 lg:pb-32 mx-auto max-w-6xl overflow-hidden">
+
+      {/* Background glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[600px] w-[900px] rounded-full opacity-20"
+        style={{ background: "radial-gradient(ellipse at center, #4f46e5 0%, transparent 70%)" }}
+      />
+
+      <div className="relative grid gap-14 lg:gap-20 lg:grid-cols-[1fr,320px] lg:items-center">
+        {/* ── Left column ── */}
         <div className="space-y-8 min-w-0">
+
+          {/* Announcement badge */}
+          <a
+            href="/qr-code-for-business-card"
+            className={cn(
+              "inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5",
+              "px-4 py-1.5 text-xs font-semibold text-primary",
+              "hover:bg-primary/10 transition-colors"
+            )}
+          >
+            <Sparkles className="h-3 w-3 shrink-0" />
+            New: Hosted digital business cards and menus
+            <ArrowRight className="h-3 w-3 shrink-0 opacity-60" />
+          </a>
+
           {/* Headline */}
-          <div className="space-y-4">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-foreground">
-              Create dynamic QR codes and update anytime
+          <div className="space-y-5">
+            <h1 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-bold tracking-[-0.03em] leading-[1.05] text-foreground">
+              QR codes that work<br className="hidden sm:block" />
+              <span className="text-primary"> after you print them</span>
             </h1>
-            <p className="text-lg sm:text-xl font-bold leading-snug text-primary">
-              Track every scan across devices, locations, and performance in one dashboard
+            <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-xl">
+              Change the destination anytime. Track every scan by device, city, and time. No reprinting ever.
             </p>
           </div>
 
-          {/* Mobile use-case quick links */}
-          <div className="md:hidden flex flex-wrap gap-2">
-            {MOBILE_USE_CASES.map(({ label, href }) => (
-              <a
-                key={href}
-                href={href}
-                className={cn(
-                  "inline-flex items-center rounded-full border px-3 py-1.5",
-                  "text-sm font-semibold text-foreground",
-                  "bg-background hover:bg-primary hover:text-primary-foreground hover:border-primary",
-                  "transition-colors duration-150"
-                )}
-              >
-                {label}
-              </a>
-            ))}
-          </div>
-
           {/* URL input */}
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-3 max-w-lg">
             <div className="flex gap-2">
               <Input
                 type="text"
-                placeholder="your-website.com or https://your-link.com"
+                placeholder="Paste any link to see a live preview"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="h-11 text-base flex-1 min-w-0"
+                className="h-12 text-sm flex-1 min-w-0 bg-background shadow-sm border-border/80 focus-visible:border-primary/60"
                 autoComplete="off"
               />
               <Button
                 type="submit"
                 size="lg"
-                className="h-11 px-4 shrink-0"
+                className="h-12 px-5 shrink-0 font-semibold shadow-md shadow-primary/20"
                 disabled={!url.trim()}
               >
                 <span className="hidden sm:inline mr-1.5">Generate</span>
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
-              {url.trim()
-                ? "Press Generate to create your trackable QR code"
-                : "Paste any link to see your QR preview update live"}
-            </p>
           </form>
 
           {/* CTAs */}
           <div className="flex flex-wrap items-center gap-3">
             {isLoggedIn ? (
-              <Button asChild size="lg" className="text-base px-7">
+              <Button asChild size="lg" className="h-12 px-7 text-sm font-semibold shadow-md shadow-primary/25">
                 <a href="/dashboard">Go to Dashboard</a>
               </Button>
             ) : (
-              <Button asChild size="lg" className="text-base px-7">
-                <a href="/sign-up">Create Free QR Code →</a>
+              <Button asChild size="lg" className="h-12 px-7 text-sm font-semibold shadow-md shadow-primary/25">
+                <a href="/sign-up">Start for free</a>
               </Button>
             )}
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="text-base px-7"
-            >
-              <a href="#how-it-works">See How It Works</a>
+            <Button asChild variant="ghost" size="lg" className="h-12 px-7 text-sm font-medium text-muted-foreground hover:text-foreground">
+              <a href="#how-it-works">See how it works</a>
             </Button>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 -mt-4">
-            <span className="text-sm text-muted-foreground">Free plan available</span>
-            <span className="text-sm text-muted-foreground">No credit card required</span>
-            <span className="text-sm text-muted-foreground">Cancel anytime</span>
+          {/* Trust line */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 pt-1">
+            {TRUST_ITEMS.map((t, i) => (
+              <span key={i} className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Check className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                {t}
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Right column: live QR preview */}
-        <div
-          className={cn(
-            "mx-auto w-full max-w-xs lg:max-w-none",
-            "transition-opacity duration-300"
-          )}
-        >
-          <QRPreviewCard
-            svgMarkup={previewSvg}
-            shortCode={previewCode}
-            previewUrl={previewUrl}
-          />
+        {/* ── Right column: QR preview ── */}
+        <div className={cn("mx-auto w-full max-w-xs lg:max-w-none", "transition-opacity duration-300")}>
+          <QRPreviewCard svgMarkup={previewSvg} shortCode={previewCode} previewUrl={previewUrl} />
         </div>
       </div>
     </section>

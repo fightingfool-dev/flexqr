@@ -106,7 +106,7 @@ export function LogoPanel({ settings, onChange }: Props) {
       {/* Size slider */}
       <div>
         <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 block">
-          Size — {Math.round(settings.logoSize * 100)}%
+          Logo size · {Math.round(settings.logoSize * 100)}%
         </Label>
         <input
           type="range"
