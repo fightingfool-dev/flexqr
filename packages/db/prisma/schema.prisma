@@ -41,6 +41,8 @@ model Workspace {
   qrCodes      QRCode[]
   subscription Subscription?
   domains      Domain[]
+  invitations  Invitation[]
+  apiKeys      ApiKey[]
 
   @@map("workspaces")
 }
@@ -172,6 +174,45 @@ model Event {
   @@index([event])
   @@index([createdAt])
   @@map("events")
+}
+
+// ---------------------------------------------------------------------------
+// Team invitations
+// ---------------------------------------------------------------------------
+model Invitation {
+  id          String    @id @default(dbgenerated("gen_random_uuid()::text"))
+  workspaceId String
+  email       String
+  role        Role      @default(MEMBER)
+  token       String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([workspaceId, email])
+  @@map("invitations")
+}
+
+// ---------------------------------------------------------------------------
+// API keys (SHA-256 hashed, prefix stored for display)
+// ---------------------------------------------------------------------------
+model ApiKey {
+  id          String    @id @default(dbgenerated("gen_random_uuid()::text"))
+  workspaceId String
+  name        String
+  keyHash     String    @unique
+  keyPrefix   String
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  revokedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@map("api_keys")
 }
 
 // ---------------------------------------------------------------------------

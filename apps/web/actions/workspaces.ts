@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { logError, isNextInternalError } from "@/lib/logger";
+import { sendWelcomeEmail } from "@/lib/email";
 
 type WorkspaceState = { error?: string };
 
@@ -55,6 +56,8 @@ export async function createWorkspace(
       await supabaseAdmin.from("workspaces").delete().eq("id", wsData.id);
       return { error: memberError.message };
     }
+
+    if (user.email) sendWelcomeEmail(user.email, user.user_metadata?.full_name ?? user.email).catch(() => {});
 
     revalidatePath("/dashboard");
     redirect(next);

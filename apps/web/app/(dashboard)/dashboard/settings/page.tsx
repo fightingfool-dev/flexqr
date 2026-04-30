@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Check, Zap, Lock, Users, Key, Building2 } from "lucide-react";
+import { Check, Zap, Lock, Users, Key, Building2, UserX } from "lucide-react";
 import { requireUser, getUserWorkspaces } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PLANS, formatPrice, ENTERPRISE_MAILTO } from "@/lib/plans";
@@ -8,6 +8,9 @@ import { createCheckoutSession } from "@/actions/billing";
 import { Button } from "@/components/ui/button";
 import { BillingSuccessRefresh } from "@/components/billing/billing-success-refresh";
 import { ManageSubscriptionButton } from "@/components/billing/manage-subscription-button";
+import { InviteForm } from "@/components/settings/invite-form";
+import { ApiKeyManager } from "@/components/settings/api-key-manager";
+import { removeMember, revokeInvitation } from "@/actions/invitations";
 import type { DbSubscription, Plan } from "@/lib/database.types";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -38,7 +41,7 @@ export default async function SettingsPage({
   const workspace = workspaces[0]!;
   const { billing } = await searchParams;
 
-  const [{ count: qrCount }, { data: subData }] = await Promise.all([
+  const [{ count: qrCount }, { data: subData }, { data: membersData }, { data: invitesData }, { data: apiKeysData }] = await Promise.all([
     supabaseAdmin
       .from("qr_codes")
       .select("*", { count: "exact", head: true })
@@ -48,6 +51,22 @@ export default async function SettingsPage({
       .select("*")
       .eq("workspaceId", workspace.id)
       .maybeSingle(),
+    supabaseAdmin
+      .from("workspace_members")
+      .select("id, role, userId, users(email, name)")
+      .eq("workspaceId", workspace.id),
+    supabaseAdmin
+      .from("invitations")
+      .select("id, email, role, expiresAt")
+      .eq("workspaceId", workspace.id)
+      .is("acceptedAt", null)
+      .gt("expiresAt", new Date().toISOString()),
+    supabaseAdmin
+      .from("api_keys")
+      .select("id, name, keyPrefix, createdAt, lastUsedAt")
+      .eq("workspaceId", workspace.id)
+      .is("revokedAt", null)
+      .order("createdAt", { ascending: false }),
   ]);
 
   const currentPlan = workspace.plan as Plan;
@@ -60,6 +79,16 @@ export default async function SettingsPage({
 
   const isPaid = currentPlan !== "FREE" && currentPlan !== "ENTERPRISE";
   const isEnterprise = currentPlan === "ENTERPRISE";
+  const hasTeamAccess = currentPlan === "PRO" || isEnterprise;
+  const hasApiAccess = currentPlan !== "FREE";
+
+  type MemberRow = { id: string; role: string; userId: string; users: { email: string; name: string | null } | null };
+  type InviteRow = { id: string; email: string; role: string; expiresAt: string };
+  type ApiKeyRow = { id: string; name: string; keyPrefix: string; createdAt: string; lastUsedAt: string | null };
+
+  const members = (membersData ?? []) as unknown as MemberRow[];
+  const invites = (invitesData ?? []) as unknown as InviteRow[];
+  const apiKeys = (apiKeysData ?? []) as unknown as ApiKeyRow[];
 
   // Plans the user can upgrade to (higher than current, excluding current)
   const upgradePlans = PLAN_ORDER.filter(
@@ -238,74 +267,124 @@ export default async function SettingsPage({
       <section className="space-y-4">
         <div className="flex items-center gap-2">
           <h2 className="text-base font-semibold">Team</h2>
-          {!isEnterprise && (
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-100 dark:text-amber-300 dark:bg-amber-950 px-2 py-0.5 rounded-full">
+          {!hasTeamAccess && (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-700 bg-violet-100 dark:text-violet-300 dark:bg-violet-950 px-2 py-0.5 rounded-full">
               <Lock className="h-3 w-3" />
-              Enterprise
+              Pro
             </span>
           )}
         </div>
 
-        {isEnterprise ? (
-          <div className="rounded-xl border bg-card p-5 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
+        {hasTeamAccess ? (
+          <div className="rounded-xl border bg-card p-5 shadow-sm space-y-5">
+            {/* Member list */}
+            <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Team members</span>
+                <span className="text-sm font-medium">Members ({members.length})</span>
               </div>
-              <Button size="sm" disabled>
-                Invite member
-              </Button>
+              <div className="divide-y rounded-lg border overflow-hidden">
+                {members.map((m) => (
+                  <div key={m.id} className="flex items-center gap-3 px-4 py-2.5">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{m.users?.name ?? m.users?.email ?? "Unknown"}</p>
+                      <p className="text-xs text-muted-foreground truncate">{m.users?.email}</p>
+                    </div>
+                    <span className="text-xs bg-muted px-2 py-0.5 rounded-full capitalize">
+                      {m.role.toLowerCase()}
+                    </span>
+                    {m.role !== "OWNER" && m.userId !== user.id && (
+                      <form action={removeMember.bind(null, m.id)}>
+                        <button type="submit" className="text-muted-foreground hover:text-destructive transition-colors" title="Remove member">
+                          <UserX className="h-3.5 w-3.5" />
+                        </button>
+                      </form>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Team management is coming soon. You&apos;ll be notified when it&apos;s ready.
-            </p>
-            <div className="flex items-center justify-between pt-1 border-t">
-              <div className="flex items-center gap-2">
-                <Key className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">API access</span>
+
+            {/* Pending invitations */}
+            {invites.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Pending invitations</p>
+                <div className="divide-y rounded-lg border overflow-hidden">
+                  {invites.map((inv) => (
+                    <div key={inv.id} className="flex items-center gap-3 px-4 py-2.5">
+                      <p className="flex-1 text-sm text-muted-foreground truncate">{inv.email}</p>
+                      <span className="text-xs bg-muted px-2 py-0.5 rounded-full capitalize">{inv.role.toLowerCase()}</span>
+                      <form action={revokeInvitation.bind(null, inv.id)}>
+                        <button type="submit" className="text-muted-foreground hover:text-destructive transition-colors text-xs">
+                          Revoke
+                        </button>
+                      </form>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <span className="text-xs bg-muted px-2 py-1 rounded-md text-muted-foreground">
-                Coming soon
-              </span>
+            )}
+
+            {/* Invite form */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Invite a team member</p>
+              <InviteForm />
             </div>
           </div>
         ) : (
-          <div className="rounded-xl border bg-card p-5 shadow-sm space-y-4 pointer-events-none select-none opacity-60">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Team members</span>
-              </div>
-              <span className="text-sm text-muted-foreground">— members</span>
+          <div className="rounded-xl border bg-card p-5 shadow-sm space-y-3">
+            <div className="flex items-center gap-2 opacity-50">
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm">Invite teammates and manage roles</span>
             </div>
-            <div className="flex items-center justify-between border-t pt-3">
-              <div className="flex items-center gap-2">
-                <Key className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">API access</span>
+            <div className="rounded-lg border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/30 px-4 py-3 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-violet-900 dark:text-violet-200">Unlock team invites with Pro</p>
+                <p className="text-xs text-violet-700 dark:text-violet-400 mt-0.5">Invite teammates and manage permissions.</p>
               </div>
-              <span className="text-xs bg-muted px-2 py-1 rounded-md text-muted-foreground">Locked</span>
+              <Button asChild size="sm" className="shrink-0">
+                <Link href="/dashboard/settings#upgrade">Upgrade</Link>
+              </Button>
             </div>
           </div>
         )}
+      </section>
 
-        {!isEnterprise && (
-          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
-                Unlock team features with Enterprise
-              </p>
-              <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
-                Invite teammates, manage permissions, and access the API.
-              </p>
+      {/* API Keys section */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-base font-semibold">API access</h2>
+          {!hasApiAccess && (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-700 bg-violet-100 dark:text-violet-300 dark:bg-violet-950 px-2 py-0.5 rounded-full">
+              <Lock className="h-3 w-3" />
+              Starter+
+            </span>
+          )}
+        </div>
+
+        {hasApiAccess ? (
+          <div className="rounded-xl border bg-card p-5 shadow-sm space-y-4">
+            <div className="flex items-center gap-2">
+              <Key className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-medium">API keys ({apiKeys.length}/10)</span>
             </div>
-            <Button
-              asChild
-              size="sm"
-              className="shrink-0 bg-amber-400 text-amber-950 hover:bg-amber-300 border-0"
-            >
-              <a href={ENTERPRISE_MAILTO}>Contact Sales</a>
-            </Button>
+            <ApiKeyManager existingKeys={apiKeys} />
+          </div>
+        ) : (
+          <div className="rounded-xl border bg-card p-5 shadow-sm space-y-3">
+            <div className="flex items-center gap-2 opacity-50">
+              <Key className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm">Automate QR creation with the REST API</span>
+            </div>
+            <div className="rounded-lg border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/30 px-4 py-3 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-violet-900 dark:text-violet-200">Unlock API access with Starter</p>
+                <p className="text-xs text-violet-700 dark:text-violet-400 mt-0.5">Create and manage QR codes programmatically.</p>
+              </div>
+              <Button asChild size="sm" className="shrink-0">
+                <Link href="/dashboard/settings#upgrade">Upgrade</Link>
+              </Button>
+            </div>
           </div>
         )}
       </section>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, Upload } from "lucide-react";
 import { requireUser, getUserWorkspaces } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { shortCodeUrl } from "@/lib/qr";
@@ -50,18 +50,28 @@ export default async function QRCodesPage({
               : `${qrCodes.length} of ${limit} on ${planLabel}`}
           </p>
         </div>
-        {atLimit ? (
-          <Button asChild variant="outline">
-            <Link href="/dashboard/settings">Upgrade to create more</Link>
-          </Button>
-        ) : (
-          <Button asChild>
-            <Link href="/dashboard/qr-codes/new">
-              <Plus className="mr-1.5 h-4 w-4" />
-              Create QR code
-            </Link>
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {!atLimit && (
+            <Button asChild variant="outline" size="sm">
+              <Link href="/dashboard/qr-codes/import">
+                <Upload className="mr-1.5 h-3.5 w-3.5" />
+                Import CSV
+              </Link>
+            </Button>
+          )}
+          {atLimit ? (
+            <Button asChild variant="outline">
+              <Link href="/dashboard/settings">Upgrade to create more</Link>
+            </Button>
+          ) : (
+            <Button asChild>
+              <Link href="/dashboard/qr-codes/new">
+                <Plus className="mr-1.5 h-4 w-4" />
+                Create QR code
+              </Link>
+            </Button>
+          )}
+        </div>
       </div>
 
       {atLimit && qrCodes.length > 0 && (

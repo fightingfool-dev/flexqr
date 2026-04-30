@@ -142,17 +142,15 @@ export default async function MenuPage({ params }: Props) {
 
       {/* Footer */}
       <footer className="border-t border-stone-200 py-4 text-center bg-white">
-        <p className="text-[10px] text-stone-400">
-          Menu powered by{" "}
-          <a
-            href="https://www.analogqr.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-stone-500 hover:underline"
-          >
-            AnalogQR
-          </a>
-        </p>
+        <a
+          href="https://www.analogqr.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-500 hover:text-stone-700 transition-colors"
+        >
+          <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-violet-600 text-[9px] font-black text-white leading-none">QR</span>
+          Create your own digital menu at AnalogQR
+        </a>
       </footer>
     </div>
   );

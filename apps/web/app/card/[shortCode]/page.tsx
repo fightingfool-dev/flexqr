@@ -195,18 +195,16 @@ export default async function CardPage({ params }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-slate-100 py-3.5 text-center">
-          <p className="text-[10px] text-slate-400">
-            Card powered by{" "}
-            <a
-              href="https://www.analogqr.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-slate-500 hover:underline"
-            >
-              AnalogQR
-            </a>
-          </p>
+        <div className="border-t border-slate-100 py-4 text-center">
+          <a
+            href="https://www.analogqr.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+          >
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-violet-600 text-[9px] font-black text-white leading-none">QR</span>
+            Create your own free QR card at AnalogQR
+          </a>
         </div>
       </div>
     </div>
