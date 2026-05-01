@@ -12,41 +12,50 @@ export async function sendWelcomeEmail(to: string, name: string): Promise<void> 
   if (!resend) return;
   const first = name.split(" ")[0] || "there";
   const html = wrap(`
-    <h1 class="h1">Welcome to AnalogQR, ${first}! 👋</h1>
+    <h1 class="h1">Welcome to AnalogQR, ${first}!</h1>
     <p class="p">You're set up and ready to go. Here's how to create your first dynamic QR code in under 60 seconds:</p>
     <p class="p" style="background:#f3f4f6;border-radius:8px;padding:16px;margin:0 0 16px">
       <strong>1.</strong> Go to your dashboard and click <strong>"New QR Code"</strong><br>
       <strong>2.</strong> Choose your type: URL, business card, restaurant menu, and more<br>
       <strong>3.</strong> Download your QR and print or share it anywhere
     </p>
-    <p class="p">The best part? You can <strong>update the destination URL anytime</strong> — no reprinting needed. Ever.</p>
-    <a class="btn" href="https://www.analogqr.com/dashboard/qr-codes/new">Create My First QR Code →</a>
+    <p class="p">The best part? You can <strong>update the destination URL anytime</strong>, no reprinting needed. Ever.</p>
+    <a class="btn" href="https://www.analogqr.com/dashboard/qr-codes/new">Create My First QR Code</a>
     <hr class="divider">
-    <p class="small">Questions? Reply to this email — we read every one.</p>
+    <p class="small">Questions? Reply to this email. We read every one.</p>
   `);
-  try {
-    await resend.emails.send({ from: FROM, to, subject: "Welcome to AnalogQR — create your first QR code", html });
-  } catch {
-    // non-fatal — don't block workspace creation
-  }
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Welcome to AnalogQR",
+    html,
+  });
+  if (error) console.error("[email:welcome]", error);
 }
 
-export async function sendInviteEmail(to: string, workspaceName: string, inviterName: string, token: string): Promise<void> {
+export async function sendInviteEmail(
+  to: string,
+  workspaceName: string,
+  inviterName: string,
+  token: string
+): Promise<void> {
   if (!resend) return;
   const acceptUrl = `${env.APP_URL}/invite/${token}`;
   const html = wrap(`
     <h1 class="h1">You're invited to ${workspaceName}</h1>
     <p class="p"><strong>${inviterName || "Someone"}</strong> has invited you to join their AnalogQR workspace <strong>${workspaceName}</strong>.</p>
     <p class="p">Click below to accept the invitation and start collaborating on QR codes:</p>
-    <a class="btn" href="${acceptUrl}">Accept Invitation →</a>
+    <a class="btn" href="${acceptUrl}">Accept Invitation</a>
     <hr class="divider">
     <p class="small">This invitation expires in 7 days. If you didn't expect this email, you can safely ignore it.</p>
   `);
-  try {
-    await resend.emails.send({ from: FROM, to, subject: `You've been invited to join ${workspaceName} on AnalogQR`, html });
-  } catch {
-    // non-fatal
-  }
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `You've been invited to join ${workspaceName} on AnalogQR`,
+    html,
+  });
+  if (error) console.error("[email:invite]", error);
 }
 
 export async function sendContactEmail(
@@ -60,7 +69,8 @@ export async function sendContactEmail(
     return;
   }
   const to = process.env.CONTACT_EMAIL ?? env.RESEND_FROM;
-  const safe = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const safe = (s: string) =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const html = wrap(`
     <h1 class="h1">New message: ${safe(subject)}</h1>
     <p class="p"><strong>From:</strong> ${safe(name)} &lt;${safe(fromEmail)}&gt;</p>
@@ -69,13 +79,14 @@ export async function sendContactEmail(
     <hr class="divider">
     <p class="small">Sent via analogqr.com/contact</p>
   `);
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: FROM,
     to,
     replyTo: fromEmail,
     subject: `[Contact] ${subject}`,
     html,
   });
+  if (error) throw new Error(error.message);
 }
 
 export async function sendScanMilestoneEmail(
@@ -87,16 +98,19 @@ export async function sendScanMilestoneEmail(
   if (!resend) return;
   const analyticsUrl = `${env.APP_URL}/dashboard/qr-codes/${qrId}/analytics`;
   const html = wrap(`
-    <h1 class="h1">🎉 ${milestone} scans on "${qrName}"!</h1>
-    <p class="p">Your QR code <strong>"${qrName}"</strong> just hit <strong>${milestone.toLocaleString()} scans</strong>. People are scanning — keep it up!</p>
+    <h1 class="h1">${milestone.toLocaleString()} scans on "${qrName}"!</h1>
+    <p class="p">Your QR code <strong>"${qrName}"</strong> just hit <strong>${milestone.toLocaleString()} scans</strong>. People are scanning, keep it up!</p>
     <p class="p">Head to your analytics dashboard to see where scans are coming from, what devices people use, and when traffic peaks.</p>
-    <a class="btn" href="${analyticsUrl}">View Analytics →</a>
+    <a class="btn" href="${analyticsUrl}">View Analytics</a>
     <hr class="divider">
-    <p class="small">You'll receive another notification at the next milestone. These emails can be managed in your dashboard settings.</p>
+    <p class="small">You'll receive another notification at the next milestone.</p>
   `);
-  try {
-    await resend.emails.send({ from: FROM, to, subject: `🎉 "${qrName}" just hit ${milestone.toLocaleString()} scans!`, html });
-  } catch {
-    // non-fatal
-  }
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `"${qrName}" just hit ${milestone.toLocaleString()} scans`,
+    headers: { "Idempotency-Key": `scan-milestone/${qrId}/${milestone}` },
+    html,
+  });
+  if (error) console.error("[email:milestone]", error);
 }
